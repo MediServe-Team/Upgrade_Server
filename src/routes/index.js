@@ -1,7 +1,7 @@
-const authRouter = require('./auth');
+import authRouter from './auth.route.js';
 
 function route(app) {
   app.use('/api/auth', authRouter);
 }
 
-module.exports = route;
+export default route;
