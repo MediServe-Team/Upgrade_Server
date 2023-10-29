@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const logging = false;
 
@@ -49,5 +49,4 @@ const prisma = new PrismaClient({
 if (logging) {
   logQuery(prisma);
 }
-
-module.exports = { prisma };
+export default prisma;

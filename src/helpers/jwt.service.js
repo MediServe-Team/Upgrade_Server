@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const createError = require('http-errors');
+import jwt from 'jsonwebtoken';
+import createError from 'http-errors';
 
 const createAccessToken = async (userId, email, role) => {
   return new Promise((resolve, reject) => {
@@ -93,7 +93,7 @@ const verifyStaffAdminAccess = async (req, res, next) => {
   else return next(createError.Unauthorized('Only staff and admin can to use this resource'));
 };
 
-module.exports = {
+export {
   createAccessToken,
   verifyAccessToken,
   createRefreshToken,
