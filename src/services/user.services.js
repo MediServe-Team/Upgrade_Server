@@ -10,6 +10,33 @@ export default {
     }
   },
 
+  getUserById: async (userId) => {
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      return Promise.resolve(user);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  updateUserById: async (userId, dataUpdateInvo) => {
+    try {
+      const dataUpdate = {};
+      dataUpdate.refreshToken = dataUpdateInvo.refreshToken ?? dataUpdateInvo.refreshToken;
+
+      const userSaved = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: dataUpdate,
+      });
+
+      return Promise.resolve(userSaved);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createUser: async ({ email, password, name, fullName }) => {
     try {
       const user = {

@@ -23,7 +23,7 @@ const createAccessToken = async (userId, email, role) => {
 
 const verifyAccessToken = async (req, res, next) => {
   if (!req.headers['authorization']) {
-    return next(createError.Unauthorized());
+    return next(createError.Unauthorized('Not found authorization information in header of request.'));
   }
 
   const authHeader = req.headers['authorization'];
