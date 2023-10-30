@@ -19,6 +19,8 @@ CREATE TABLE permission(
 
 -- create enum role
 CREATE TYPE tp_role AS ENUM ('USER', 'STAFF', 'ADMIN');
+-- create enum item type
+CREATE TYPE tp_item_type AS ENUM('PRODUCT', 'MEDICINE')
 
 -- select enum_range(null::tp_role)
 
@@ -119,7 +121,7 @@ CREATE TABLE item(
 	item_image TEXT,
 	is_prescription BOOLEAN NOT NULL,
 	note TEXT,
-	item type INT DEFAULT 0,
+	item_type tp_item_type NOT NULL DEFAULT 'PRODUCT',
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (item_id),

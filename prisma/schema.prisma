@@ -18,6 +18,13 @@ enum Role {
   @@map("tp_role")
 }
 
+enum ItemType {
+  PRODUCT
+  MEDICINE
+
+  @@map("tp_item_type")
+}
+
 model Permission {
   id             Int       @id @default(autoincrement()) @map("permission_id")
   permissionName String    @map("permission_name")
@@ -142,6 +149,7 @@ model Item {
   itemFunction            String?         @map("item_function")
   itemImage               String?         @map("item_image")
   isPrescription          Boolean         @map("is_prescription")
+  itemType                ItemType        @default(value: PRODUCT) @map("item_type")
   note                    String?         @map("note")
   createdAt               DateTime?       @default(now()) @map("created_at")
   updatedAt               DateTime?       @updatedAt @map("updated_at")
