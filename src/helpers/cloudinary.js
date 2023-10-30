@@ -42,7 +42,4 @@ const removeImg = (imageUrl) => {
   });
 };
 
-export default {
-  storeImg,
-  removeImg,
-};
+export { storeImg, removeImg };
