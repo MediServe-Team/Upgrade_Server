@@ -17,6 +17,57 @@ const formatGroupInvoiceByDate = (invoices) => {
 };
 
 export default {
+  filterHistory: async (fromDate, toDate, sort, pageNumber, limit) => {
+    try {
+      //* defind option
+      const skip = pageNumber && limit ? (Number(pageNumber) - 1) * Number(limit) : null;
+      const order =
+        sort && (sort.toLowerCase() === 'asc' || sort.toLowerCase() === 'desc') ? sort.toLowerCase() : 'desc';
+      const whereClause = {
+        ...(fromDate && toDate
+          ? {
+              createdAt: {
+                gte: new Date(fromDate),
+                lte: new Date(toDate),
+              },
+            }
+          : {}),
+      };
+
+      //* Task get invoices with filter
+      let getInvoices = () => {
+        return new Promise(async (resolve) => {
+          const invoices = await prisma.invoiceIntoStock.findMany({
+            where: whereClause,
+            ...(pageNumber && limit ? { skip: skip, take: Number(limit) } : {}),
+            orderBy: { createdAt: order },
+            include: { staff: { select: { fullName: true } } },
+          });
+          resolve(formatGroupInvoiceByDate(invoices));
+        });
+      };
+
+      //*  Task count total Page base on data filter
+      let countTotalPage = () => {
+        return new Promise(async (resolve) => {
+          const totalInvoices = await prisma.invoiceIntoStock.count({
+            where: whereClause,
+          });
+          resolve(totalInvoices);
+        });
+      };
+
+      const data = await Promise.all([getInvoices(), countTotalPage()]);
+      return Promise.resolve({
+        listGroupDate: data[0],
+        currentPage: pageNumber,
+        totalPage: Math.ceil(data[1] / limit),
+      });
+    } catch (err) {
+      throw err;
+    }
+  },
+
   getInvoiceByDate: async (from, to, sort) => {
     try {
       if (!from || !to) return null;
