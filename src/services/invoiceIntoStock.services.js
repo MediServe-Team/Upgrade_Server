@@ -17,6 +17,29 @@ const formatGroupInvoiceByDate = (invoices) => {
 };
 
 export default {
+  filterProduct: async (search, categoryId) => {
+    try {
+      if (!search || !categoryId) {
+        throw createError.ExpectationFailed('expected "search" and "categoryId" in request!');
+      }
+      // query filter
+      const itemResults = await prisma.item.findMany({
+        where: {
+          AND: [
+            {
+              OR: [{ itemName: { contains: search } }, { packingSpecification: { contains: search } }],
+            },
+            { categoryId: Number(categoryId) },
+          ],
+        },
+      });
+
+      return Promise.resolve(itemResults);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   filterHistory: async (fromDate, toDate, sort, pageNumber, limit) => {
     try {
       //* defind option

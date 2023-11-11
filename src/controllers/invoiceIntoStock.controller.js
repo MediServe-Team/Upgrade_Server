@@ -1,6 +1,20 @@
 import invoiceIntoStockServices from '../services/invoiceIntoStock.services.js';
 
 export default {
+  filterProduct: async (req, res, next) => {
+    try {
+      const { search, categoryId } = req.query;
+      const data = await invoiceIntoStockServices.filterProduct(search, categoryId);
+      res.status(200).json({
+        status: 200,
+        message: 'filter product success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   filterHistory: async (req, res, next) => {
     try {
       const { fromDate, toDate, sort, pageNumber, limit } = req.query;
