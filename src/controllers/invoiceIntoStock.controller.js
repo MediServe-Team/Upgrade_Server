@@ -1,6 +1,20 @@
 import invoiceIntoStockServices from '../services/invoiceIntoStock.services.js';
 
 export default {
+  getDetailInvoice: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await invoiceIntoStockServices.getInvoiceById(id);
+      res.json({
+        status: 200,
+        message: 'get an invoice success.',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   createInvoice: async (req, res, next) => {
     try {
       const { staffId, totalImportPrice, totalSellPrice, note, listItem } = req.body;

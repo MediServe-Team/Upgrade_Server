@@ -17,6 +17,30 @@ const formatGroupInvoiceByDate = (invoices) => {
 };
 
 export default {
+  getInvoiceById: async (id) => {
+    try {
+      const invoiceResult = await prisma.invoiceIntoStock.findUnique({
+        where: { id: Number(id) },
+        include: {
+          ItemInStocks: {
+            include: {
+              item: {
+                select: {
+                  itemName: true,
+                  packingSpecification: true,
+                  itemType: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return Promise.resolve(invoiceResult);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createNewInvoice: async (invoiceInvo, listItem) => {
     try {
       // invoice create data
