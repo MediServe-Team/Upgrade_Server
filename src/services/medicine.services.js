@@ -2,6 +2,16 @@ import prisma from '../config/prisma.instance.js';
 import { storeImg, removeImg } from '../helpers/cloudinary.js';
 
 export default {
+
+  getMedicineById: async (id) => {
+    try {
+      const data = await prisma.item.findUnique({ where: { id: Number(id), itemType: 'MEDICINE' } });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createMedicine: async (medicineInvo) => {
     try {
       // medicine data

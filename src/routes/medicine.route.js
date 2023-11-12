@@ -2,6 +2,10 @@ import express from 'express';
 const router = express.Router();
 import medicineController from '../controllers/medicine.controller.js';
 
+
+//* [GET] /medicines/details/:id     -> get detail a medicine
+router.get('/detail/:id', medicineController.getDetailMedicine);
+
 //* [POST] /medicines/create     -> create a medicine
 router.post('/create', medicineController.createMedicine);
 
