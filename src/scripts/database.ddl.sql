@@ -14,11 +14,13 @@
 CREATE TABLE permission(
 	permission_id SERIAL,
 	permission_name VARCHAR(100) NOT NULL,
-	PRIMARY KEY (permit_id)
+	PRIMARY KEY (permission_id)
 )
 
 -- create enum role
 CREATE TYPE tp_role AS ENUM ('USER', 'STAFF', 'ADMIN');
+-- create enum item type
+CREATE TYPE tp_item_type AS ENUM('PRODUCT', 'MEDICINE')
 
 -- select enum_range(null::tp_role)
 
@@ -27,7 +29,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users(
 	user_id UUID DEFAULT uuid_generate_v4(),
-	role tp_role NOT NULL,
+	role tp_role NOT NULL DEFAULT 'USER',
 	email TEXT NOT NULL UNIQUE,
 	name VARCHAR(20),
 	full_name VARCHAR(40),
@@ -119,7 +121,7 @@ CREATE TABLE item(
 	item_image TEXT,
 	is_prescription BOOLEAN NOT NULL,
 	note TEXT,
-	item type INT DEFAULT 0,
+	item_type tp_item_type NOT NULL DEFAULT 'PRODUCT',
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (item_id),
@@ -175,10 +177,11 @@ CREATE TABLE detail_receipt_item(
 	total_price INTEGER,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (receipt_id, item_id),
+	PRIMARY KEY (receipt_id, item_stock_id),
 	CONSTRAINT fk_detailreceipt_receipt FOREIGN KEY(receipt_id) REFERENCES receipt(receipt_id) ON DELETE CASCADE,
-	CONSTRAINT fk_detailreceipt_item FOREIGN KEY(item_id) REFERENCES item(item_id) ON DELETE CASCADE
+	CONSTRAINT fk_detailreceipt_item_stock FOREIGN KEY(item_stock_id) REFERENCES item_in_stock(item_in_stock_id) ON DELETE CASCADE
 )
+
 
 
 
@@ -237,7 +240,7 @@ CREATE TABLE medicine_guide_sell(
 	note TEXT,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (medicine_id, prescription_id),
-	CONSTRAINT fk_medicineguide_medicine FOREIGN KEY(medicine_id) REFERENCES item_in_stock(item_in_stock_id) ON DELETE CASCADE,
+	PRIMARY KEY (medicine_stock_id, prescription_id),
+	CONSTRAINT fk_medicineguide_medicine FOREIGN KEY(medicine_stock_id) REFERENCES item_in_stock(item_in_stock_id) ON DELETE CASCADE,
 	CONSTRAINT fk_medicine_guide_prescription FOREIGN KEY(prescription_id) REFERENCES prescription(prescription_id) ON DELETE CASCADE
 )

@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const createError = require('http-errors');
+import jwt from 'jsonwebtoken';
+import createError from 'http-errors';
 
 const createAccessToken = async (userId, email, role) => {
   return new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ const createAccessToken = async (userId, email, role) => {
 
 const verifyAccessToken = async (req, res, next) => {
   if (!req.headers['authorization']) {
-    return next(createError.Unauthorized());
+    return next(createError.Unauthorized('Not found authorization information in header of request.'));
   }
 
   const authHeader = req.headers['authorization'];
@@ -93,7 +93,7 @@ const verifyStaffAdminAccess = async (req, res, next) => {
   else return next(createError.Unauthorized('Only staff and admin can to use this resource'));
 };
 
-module.exports = {
+export {
   createAccessToken,
   verifyAccessToken,
   createRefreshToken,

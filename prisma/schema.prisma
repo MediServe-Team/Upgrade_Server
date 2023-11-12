@@ -18,6 +18,13 @@ enum Role {
   @@map("tp_role")
 }
 
+enum ItemType {
+  PRODUCT
+  MEDICINE
+
+  @@map("tp_item_type")
+}
+
 model Permission {
   id             Int       @id @default(autoincrement()) @map("permission_id")
   permissionName String    @map("permission_name")
@@ -134,14 +141,15 @@ model Item {
   packingSpecification    String          @map("packing_specification")
   chemicalName            String          @map("chemical_name")
   chemicalCode            String          @map("chemical_code")
-  barCode                 String          @map("bar_code")
+  barCode                 String?         @map("bar_code")
   sellUnit                String          @map("sell_unit")
   inputUnit               String          @map("input_unit")
-  applyToAffectedAreaCode String          @map("apply_to_affected_area_code")
-  applyToAffectedArea     String          @map("apply_to_affected_area")
+  applyToAffectedAreaCode String?         @map("apply_to_affected_area_code")
+  applyToAffectedArea     String?         @map("apply_to_affected_area")
   itemFunction            String?         @map("item_function")
   itemImage               String?         @map("item_image")
-  isPrescription          Boolean         @map("is_prescription")
+  isPrescription          Boolean         @default(false) @map("is_prescription")
+  itemType                ItemType        @default(value: PRODUCT) @map("item_type")
   note                    String?         @map("note")
   createdAt               DateTime?       @default(now()) @map("created_at")
   updatedAt               DateTime?       @updatedAt @map("updated_at")
@@ -156,7 +164,7 @@ model Item {
 
 model ItemInStock {
   invoiceIntoStockId Int                 @map("invoice_into_stock_id")
-  itemInStockId      Int                 @unique() @map("item_in_stock_id")
+  itemInStockId      Int                 @unique() @default(autoincrement()) @map("item_in_stock_id")
   itemId             Int                 @map("item_id")
   lotNumber          String              @map("lot_number")
   manufactureDate    DateTime            @map("manufacture_date")
