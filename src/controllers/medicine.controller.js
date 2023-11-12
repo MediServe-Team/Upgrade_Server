@@ -2,6 +2,20 @@ import medicineServices from '../services/medicine.services.js';
 
 export default {
 
+  getAllMedicine: async (req, res, next) => {
+    try {
+      const { pageNumber, limit } = req.query;
+      const data = await medicineServices.getAllMedicine(pageNumber, limit);
+      res.status(200).json({
+        status: 200,
+        message: 'get medicine with pagination success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   getDetailMedicine: async (req, res, next) => {
     try {
       const { id } = req.params;

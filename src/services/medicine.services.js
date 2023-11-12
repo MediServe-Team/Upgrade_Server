@@ -3,6 +3,36 @@ import { storeImg, removeImg } from '../helpers/cloudinary.js';
 
 export default {
 
+  getAllMedicine: async (pageNumber, limit) => {
+    try {
+      if (!pageNumber || !limit) {
+        throw createError.ExpectationFailed('Expected "pageNumber" and "limit" in request.');
+      }
+      const skip = (Number(pageNumber) - 1) * Number(limit);
+      let getMedicines = () => {
+        return new Promise(async (resolve) => {
+          const medicineServices = await prisma.item.findMany({
+            where: { itemType: 'MEDICINE' },
+            skip: Number(skip),
+            take: Number(limit),
+          });
+          resolve(medicineServices);
+        });
+      };
+      let countTotalMedicine = () => {
+        return new Promise(async (resolve) => {
+          const totalMedicines = await prisma.item.count({ where: { itemType: 'MEDICINE' } });
+          resolve(totalMedicines);
+        });
+      };
+      const data = await Promise.all([getMedicines(), countTotalMedicine()]);
+
+      return Promise.resolve({ medicines: data[0], currentPage: pageNumber, totalPage: Math.ceil(data[1] / limit) });
+    } catch (err) {
+      throw err;
+    }
+  },
+
   getMedicineById: async (id) => {
     try {
       const data = await prisma.item.findUnique({ where: { id: Number(id), itemType: 'MEDICINE' } });
