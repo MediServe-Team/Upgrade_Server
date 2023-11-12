@@ -1,13 +1,8 @@
 import prisma from '../config/prisma.instance.js';
-import createError from 'http-errors';
 
 export default {
-  filterItem: async (searchValue = '', categoryId) => {
+  filterItem: async (searchValue = '', itemType, categoryId) => {
     try {
-      if (!categoryId) {
-        throw createError.ExpectationFailed('expected "categoryId" in request!');
-      }
-      // query filter item
       const itemResults = await prisma.item.findMany({
         where: {
           AND: [
@@ -17,7 +12,8 @@ export default {
                 { packingSpecification: { contains: searchValue, mode: 'insensitive' } },
               ],
             },
-            { categoryId: Number(categoryId) },
+            categoryId ? { categoryId: Number(categoryId) } : {},
+            itemType && ['PRODUCT', 'MEDICINE'].includes(itemType) ? { itemType } : {},
           ],
         },
       });
