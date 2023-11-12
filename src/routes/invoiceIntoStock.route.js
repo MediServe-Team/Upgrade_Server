@@ -11,9 +11,6 @@ router.get('/filter-history', invoiceIntoStockController.filterHistory);
 //* [GET] /invoice-into-stocks/bydate?from=""&to=""
 router.get('/by-date', invoiceIntoStockController.getInvoiceByDate);
 
-//* [GET] /invoice-into-stocks/product-filter
-router.get('/product-filter', invoiceIntoStockController.filterProduct);
-
 //* [GET] /invoice-into-stocks/:id      -> Get detail invoice into stock
 router.get('/:id', invoiceIntoStockController.getDetailInvoice);
 
