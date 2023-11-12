@@ -2,6 +2,62 @@ import prisma from '../config/prisma.instance.js';
 import { storeImg, removeImg } from '../helpers/cloudinary.js';
 
 export default {
+  getMedicineByCategory: async (categoryId, pageNumber, limit, searchValue = '') => {
+    try {
+      if (!categoryId) {
+        throw createError.ExpectationFailed('expected categoryId in request.');
+      }
+      let data;
+      let totalRows;
+      const skip = pageNumber && limit ? (Number(pageNumber) - 1) * Number(limit) : undefined;
+      const searchCondition = [
+        { itemName: { contains: searchValue, mode: 'insensitive' } },
+        { packingSpecification: { contains: searchValue, mode: 'insensitive' } },
+      ];
+
+      switch (categoryId) {
+        case 'all':
+          data = await prisma.item.findMany({
+            where: {
+              OR: [...searchCondition],
+              itemType: 'MEDICINE',
+            },
+            skip,
+            take: Number(limit),
+          });
+          totalRows = await prisma.item.count({
+            where: {
+              OR: [...searchCondition],
+              itemType: 'MEDICINE',
+            },
+          });
+          break;
+
+        default:
+          data = await prisma.item.findMany({
+            where: {
+              OR: [...searchCondition],
+              category: { id: Number(categoryId) },
+              itemType: 'MEDICINE',
+            },
+            skip,
+            take: Number(limit),
+          });
+          totalRows = await prisma.item.count({
+            where: {
+              OR: [...searchCondition],
+              category: { id: Number(categoryId) },
+              itemType: 'MEDICINE',
+            },
+          });
+          break;
+      }
+
+      return Promise.resolve({ medicines: data, totalPage: Math.ceil(totalRows / limit), currentpage: pageNumber });
+    } catch (err) {
+      throw err;
+    }
+  },
 
   getAllMedicine: async (pageNumber, limit) => {
     try {

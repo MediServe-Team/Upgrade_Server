@@ -1,6 +1,20 @@
 import medicineServices from '../services/medicine.services.js';
 
 export default {
+  getMedicineByCategory: async (req, res, next) => {
+    try {
+      const { categoryId } = req.params;
+      const { pageNumber, limit, searchValue } = req.query;
+      const data = await medicineServices.getMedicineByCategory(categoryId, pageNumber, limit, searchValue);
+      res.status(200).json({
+        status: 200,
+        message: 'get medicines by category success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 
   getAllMedicine: async (req, res, next) => {
     try {

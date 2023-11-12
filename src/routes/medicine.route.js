@@ -2,6 +2,8 @@ import express from 'express';
 const router = express.Router();
 import medicineController from '../controllers/medicine.controller.js';
 
+//* [GET] /medicines/by-category/:categoryId
+router.get('/by-category/:categoryId', medicineController.getMedicineByCategory);
 
 //* [GET] /medicines/paginate     -> get all medicine
 router.get('/paginate', medicineController.getAllMedicine);
