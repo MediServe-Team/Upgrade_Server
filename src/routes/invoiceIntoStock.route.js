@@ -2,6 +2,9 @@ import express from 'express';
 const router = express.Router();
 import invoiceIntoStockController from '../controllers/invoiceIntoStock.controller.js';
 
+//* [GET] /invoice-into-stocks/inventory?type=""    -> get product, medicine in stock
+router.get('/inventory', invoiceIntoStockController.getMerchandiseInventory);
+
 //* [GET] /invoice-into-stocks/filter-history -> Get invoice with paging group by date
 router.get('/filter-history', invoiceIntoStockController.filterHistory);
 

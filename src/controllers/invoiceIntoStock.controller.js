@@ -1,6 +1,19 @@
 import invoiceIntoStockServices from '../services/invoiceIntoStock.services.js';
 
 export default {
+  getMerchandiseInventory: async (req, res, next) => {
+    try {
+      const data = await invoiceIntoStockServices.getMerchandiseInventory();
+      res.status(200).json({
+        status: 200,
+        message: 'get data inventory stock success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   filterProduct: async (req, res, next) => {
     try {
       const { search, categoryId } = req.query;

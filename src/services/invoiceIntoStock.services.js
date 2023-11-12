@@ -17,6 +17,69 @@ const formatGroupInvoiceByDate = (invoices) => {
 };
 
 export default {
+  getMerchandiseInventory: async () => {
+    try {
+      //* get all item in stock
+      const itemInStockResults = await prisma.itemInStock.findMany({
+        select: {
+          invoiceIntoStockId: true,
+          itemInStockId: true,
+          lotNumber: true,
+          manufactureDate: true,
+          expirationDate: true,
+          importQuantity: true,
+          specification: true,
+          importPrice: true,
+          sellPrice: true,
+          soldQuantity: true,
+          destroyed: true,
+          item: {
+            select: {
+              id: true,
+              itemName: true,
+              registrationNumber: true,
+              packingSpecification: true,
+              barCode: true,
+              sellUnit: true,
+              inputUnit: true,
+              itemImage: true,
+              itemType: true,
+            },
+          },
+        },
+      });
+
+      //* detach merchandise for each status
+      // 1. prepare sold out
+      const preSoldOutMerchandise = itemInStockResults.filter(
+        (item) => item.importQuantity - item.soldQuantity / item.specification < 2,
+      );
+      // 2. prepare expired
+      const preExpMerchandise = itemInStockResults.filter((item) => {
+        const currentDate = new Date();
+        const expDate = new Date(item.expirationDate);
+        const nextThirtyDate = new Date();
+        nextThirtyDate.setDate(currentDate.getDate() + 30);
+        return expDate > currentDate && expDate <= nextThirtyDate;
+      });
+      // 3. expired
+      const expMerchandise = itemInStockResults.filter((item) => {
+        const currentDate = new Date();
+        const expDate = new Date(item.expirationDate);
+        return expDate <= currentDate;
+      });
+
+      return Promise.resolve({
+        allMerchandise: itemInStockResults,
+        preSoldOutMerchandise,
+        preExpMerchandise,
+        expMerchandise,
+      });
+    } catch (err) {
+      throw err;
+    }
+  },
+
   filterProduct: async (search, categoryId) => {
     try {
       if (!search || !categoryId) {
