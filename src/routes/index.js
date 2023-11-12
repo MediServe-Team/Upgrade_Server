@@ -3,6 +3,7 @@ import categoryRouter from './category.route.js';
 import productRouter from './product.route.js';
 import invoiceIntoStockRouter from './invoiceIntoStock.route.js';
 import unitRouter from './unit.route.js';
+import itemInStockRouter from './itemInStock.route.js';
 
 function route(app) {
   app.use('/api/auth', authRouter);
@@ -10,6 +11,7 @@ function route(app) {
   app.use('/api/products', productRouter);
   app.use('/api/invoice-into-stocks', invoiceIntoStockRouter);
   app.use('/api/units', unitRouter);
+  app.use('/api/item-in-stocks', itemInStockRouter);
 }
 
 export default route;

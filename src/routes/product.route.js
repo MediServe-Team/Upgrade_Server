@@ -2,9 +2,6 @@ import express from 'express';
 const router = express.Router();
 import productController from '../controllers/product.controller.js';
 
-//* [GET] /products/filter?searchValue=""
-router.get('/filter', productController.filterProduct);
-
 //* [GET] /products/by-category/:categoryId
 router.get('/by-category/:categoryId', productController.getProductByCategory);
 
