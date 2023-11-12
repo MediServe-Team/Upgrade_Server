@@ -92,7 +92,7 @@ export default {
 
   getProductById: async (id) => {
     try {
-      const data = await prisma.item.findUnique({ where: { id: Number(id) } });
+      const data = await prisma.item.findUnique({ where: { id: Number(id), itemType: 'PRODUCT' } });
       return Promise.resolve(data);
     } catch (err) {
       throw err;
