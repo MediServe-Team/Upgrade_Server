@@ -69,4 +69,65 @@ export default {
       throw err;
     }
   },
+
+  updateMedicineById: async (id, medicineInvo) => {
+    try {
+      // medicine data
+      const medicineUpdate = {};
+      const { barCode, medicineImage } = medicineInvo;
+
+      // medicine update data
+      medicineUpdate.categoryId = medicineInvo?.categoryId ?? Number(medicineInvo.categoryId);
+      medicineUpdate.itemName = medicineInvo?.medicineName;
+      medicineUpdate.registrationNumber = medicineInvo?.registrationNumber;
+      medicineUpdate.dosageForm = medicineInvo?.dosageForm;
+      medicineUpdate.productContent = medicineInvo?.productContent;
+      medicineUpdate.chemicalName = medicineInvo?.chemicalName;
+      medicineUpdate.chemicalCode = medicineInvo?.chemicalCode;
+      medicineUpdate.packingSpecification = medicineInvo?.packingSpecification;
+      medicineUpdate.sellUnit = medicineInvo?.sellUnit;
+      medicineUpdate.inputUnit = medicineInvo?.inputUnit;
+      medicineUpdate.itemFunction = medicineInvo?.medicineFunction;
+      medicineUpdate.note = medicineInvo?.note;
+      medicineUpdate.isPrescription = medicineInvo?.isPrescription;
+
+      //* check barcode and medicineImg in medicine before update
+      const medicineBefore = await prisma.item.findFirst({
+        where: { id: Number(id) },
+        select: { barCode: true, itemImage: true },
+      });
+
+      //* update store barcode
+      if (barCode) {
+        if (medicineBefore.barCode) {
+          try {
+            removeImg(medicineBefore.barCode);
+          } catch (err) {
+            return;
+          }
+        }
+        const imgStored = await storeImg(barCode);
+        medicineUpdate.barCode = imgStored.url;
+      }
+
+      //* update store medicine Img
+      if (medicineImage) {
+        if (medicineBefore.itemImage) {
+          try {
+            removeImg(medicineBefore.itemImage);
+          } catch (err) {
+            return;
+          }
+        }
+        const imgStored = await storeImg(medicineImage);
+        medicineUpdate.itemImage = imgStored.url;
+      }
+
+      //* update medicine
+      const data = await prisma.item.update({ data: medicineUpdate, where: { id: Number(id) } });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 };
