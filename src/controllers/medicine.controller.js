@@ -16,4 +16,18 @@ export default {
       next(err);
     }
   },
+
+  deleteMedicine: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await medicineServices.deleteMedicineById(id);
+      res.status(200).json({
+        status: 200,
+        message: 'Delete medicine success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

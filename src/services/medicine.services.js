@@ -130,4 +130,35 @@ export default {
       throw err;
     }
   },
+
+  deleteMedicineById: async (id) => {
+    try {
+      // remove image from cloud
+      (async () => {
+        const medicine = await prisma.item.findFirst({
+          where: { id: Number(id) },
+          select: { itemImage: true, barCode: true },
+        });
+        if (medicine?.itemImage) {
+          try {
+            removeImg(medicine.itemImage);
+          } catch (err) {
+            return;
+          }
+        }
+        if (medicine?.barCode) {
+          try {
+            removeImg(medicine.barCode);
+          } catch (err) {
+            return;
+          }
+        }
+      })();
+      // delete medicine
+      const data = await prisma.item.delete({ where: { id: Number(id) } });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 };
