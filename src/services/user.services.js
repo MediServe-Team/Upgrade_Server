@@ -19,29 +19,35 @@ export default {
     }
   },
 
-  getUserWithPerissionByEmail: async (email) => {
-    try {
-      const userResults = await prisma.user.findUnique({ where: { email } });
-      // get all permits of user
-      const permits = await prisma.permit.findMany({
-        where: {
-          userId: userResults.id,
-        },
-        select: {
-          permission: {
-            select: {
-              id: true,
-              permissionName: true,
-            },
+  getPermisListOfUserById: async (userId) => {
+    const permits = await prisma.permit.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        permission: {
+          select: {
+            id: true,
+            permissionName: true,
           },
         },
-      });
+      },
+    });
 
+    // get permission list Id
+    const permitList = permits.reduce((acc, curr) => {
+      acc.push(curr.permission['id']);
+      return acc;
+    }, []);
+
+    return Promise.resolve(permitList);
+  },
+
+  getUserWithPerissionByEmail: async function (email) {
+    try {
+      const userResults = await prisma.user.findUnique({ where: { email } });
       // get permission list Id
-      const permitList = permits.reduce((acc, curr) => {
-        acc.push(curr.permission['id']);
-        return acc;
-      }, []);
+      const permitList = await this.getPermisListOfUserById(userResults.id);
 
       // assign permitList for user result
       userResults.permitList = permitList;
