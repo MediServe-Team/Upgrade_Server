@@ -112,4 +112,26 @@ export default {
       throw err;
     }
   },
+
+  getUserInfo: async function (id) {
+    try {
+      const userResults = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
+      // get permission list Id
+      const permitList = await this.getPermisListOfUserById(userResults.id);
+
+      // assign permitList for user result
+      userResults.permitList = permitList;
+
+      // delete some field from data return
+      delete userResults.password;
+      delete userResults.refreshToken;
+      return Promise.resolve(userResults);
+    } catch (err) {
+      throw err;
+    }
+  },
 };

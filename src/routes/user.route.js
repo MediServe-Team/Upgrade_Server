@@ -7,4 +7,8 @@ import { verifyAccessToken, verifyAdminAccess } from '../helpers/jwt.service.js'
 //* [GET] /users/all     -> Get all user
 router.get('/all', verifyAccessToken, verifyAdminAccess, userController.getAllUser);
 
+//! can use: ADMIN
+//* [GET] /users/:id     -> Get an user by id
+router.get('/:id', verifyAccessToken, verifyAdminAccess, userController.getUser);
+
 export default router;
