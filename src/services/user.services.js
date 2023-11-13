@@ -53,4 +53,25 @@ export default {
       throw err;
     }
   },
+
+  getAllUser: async () => {
+    try {
+      const data = await prisma.user.findMany({
+        where: {
+          role: { notIn: ['ADMIN'] },
+        },
+        select: {
+          id: true,
+          role: true,
+          email: true,
+          name: true,
+          fullName: true,
+          avatar: true,
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 };
