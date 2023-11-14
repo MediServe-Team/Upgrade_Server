@@ -27,4 +27,17 @@ export default {
       next(err);
     }
   },
+
+  deleteUser: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await userServices.deleteUserById(id);
+      res.status(200).json({
+        status: 200,
+        message: 'deleted user success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

@@ -11,4 +11,8 @@ router.get('/all', verifyAccessToken, verifyAdminAccess, userController.getAllUs
 //* [GET] /users/:id     -> Get an user by id
 router.get('/:id', verifyAccessToken, verifyAdminAccess, userController.getUser);
 
+//! verify ADMIN
+//* [DELETE] /users/:id      -> Delete an user by id
+router.delete('/:id', verifyAccessToken, verifyAdminAccess, userController.deleteUser);
+
 export default router;

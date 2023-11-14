@@ -134,4 +134,17 @@ export default {
       throw err;
     }
   },
+
+  deleteUserById: async (id) => {
+    try {
+      const returnData = await prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+      return Promise.resolve(returnData);
+    } catch (err) {
+      throw err;
+    }
+  },
 };
