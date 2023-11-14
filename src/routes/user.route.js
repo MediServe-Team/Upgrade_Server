@@ -19,4 +19,8 @@ router.put('/update-user-info/:id', verifyAccessToken, verifyAdminAccess, userCo
 //* [DELETE] /users/:id      -> Delete an user by id
 router.delete('/:id', verifyAccessToken, verifyAdminAccess, userController.deleteUser);
 
+//! can use: ADMIN
+//* [PUT] /users/change-role/:id    -> Change role  of user by id
+router.put('/change-role/:id', verifyAccessToken, verifyAdminAccess, userController.changeRole);
+
 export default router;

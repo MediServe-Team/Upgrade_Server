@@ -1,4 +1,5 @@
 import prisma from '../config/prisma.instance.js';
+import createError from 'http-errors';
 
 export default {
   getUserByEmail: async (email) => {
@@ -202,6 +203,26 @@ export default {
       });
 
       return Promise.resolve(userResult);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  updateRoleById: async (id, role) => {
+    try {
+      if (['USER', 'STAFF'].includes(role)) {
+        const data = await prisma.user.update({
+          data: {
+            role,
+          },
+          where: {
+            id,
+          },
+        });
+        return Promise.resolve(data);
+      }
+
+      throw createError.BadRequest('input field "role" invalid');
     } catch (err) {
       throw err;
     }

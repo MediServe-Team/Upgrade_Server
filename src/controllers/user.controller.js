@@ -58,4 +58,18 @@ export default {
       next(err);
     }
   },
+
+  changeRole: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { role } = req.body;
+      await userServices.updateRoleById(id, role);
+      res.status(200).json({
+        status: 200,
+        message: 'update role for account success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
