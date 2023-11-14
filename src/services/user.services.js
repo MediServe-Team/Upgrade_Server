@@ -147,4 +147,63 @@ export default {
       throw err;
     }
   },
+
+  editUserById: async (id, userInvo) => {
+    try {
+      const userUpdate = {};
+      //* user update data
+      userUpdate.name = userInvo?.name;
+      userUpdate.fullName = userInvo?.fullName;
+      userUpdate.gender = userInvo?.gender;
+      userUpdate.age = userInvo?.age;
+      userUpdate.dateOfBirth = userInvo?.dateOfBirth;
+      userUpdate.phoneNumber = userInvo?.phoneNumber;
+      userUpdate.avatar = userInvo?.avatar;
+      userUpdate.address = userInvo?.address;
+      userUpdate.discount = userInvo?.discount;
+      userUpdate.identityCard = userInvo?.identityCard;
+      userUpdate.numOfPPC = userInvo?.numOfPPC;
+
+      //* query user before data
+      const beforeUserData = await prisma.user.findUnique({ where: { id } });
+
+      //* update store user certificate Img
+      if (userInvo?.certificate) {
+        if (beforeUserData?.certificate) {
+          try {
+            removeImg(beforeUserData.certificate);
+          } catch (err) {
+            return;
+          }
+        }
+        const imgStored = await storeImg(userInvo.certificate);
+        userUpdate.certificate = imgStored.url;
+      }
+
+      //* update store user identityCard Img
+      if (userInvo?.identityCard) {
+        if (beforeUserData?.identityCard) {
+          try {
+            removeImg(beforeUserData.identityCard);
+          } catch (err) {
+            return;
+          }
+        }
+        const imgStored = await storeImg(userInvo.identityCard);
+        userUpdate.identityCard = imgStored.url;
+      }
+
+      //* query update user
+      const userResult = await prisma.user.update({
+        data: userUpdate,
+        where: {
+          id,
+        },
+      });
+
+      return Promise.resolve(userResult);
+    } catch (err) {
+      throw err;
+    }
+  },
 };

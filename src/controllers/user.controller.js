@@ -40,4 +40,22 @@ export default {
       next(err);
     }
   },
+
+  editUser: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const userInvo = req.body;
+
+      //   edit user
+      const data = await userServices.editUserById(id, userInvo);
+
+      res.status(200).json({
+        status: 200,
+        message: 'updated user infomation success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

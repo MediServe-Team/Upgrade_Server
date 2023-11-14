@@ -11,6 +11,10 @@ router.get('/all', verifyAccessToken, verifyAdminAccess, userController.getAllUs
 //* [GET] /users/:id     -> Get an user by id
 router.get('/:id', verifyAccessToken, verifyAdminAccess, userController.getUser);
 
+//! can use: ADMIN
+//* [PUT] /users/update-info/:id     -> Edit an user by id
+router.put('/update-user-info/:id', verifyAccessToken, verifyAdminAccess, userController.editUser);
+
 //! verify ADMIN
 //* [DELETE] /users/:id      -> Delete an user by id
 router.delete('/:id', verifyAccessToken, verifyAdminAccess, userController.deleteUser);
