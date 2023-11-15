@@ -1,6 +1,20 @@
 import userServices from '../services/user.services.js';
 
 export default {
+  filterCustomer: async (req, res, next) => {
+    try {
+      const { searchValue } = req.query;
+      const data = await userServices.filterCustomer(searchValue);
+      res.status(200).json({
+        status: 200,
+        message: 'filter customer success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   getAllUser: async (req, res, next) => {
     try {
       const userResults = await userServices.getAllUser();

@@ -2,6 +2,29 @@ import prisma from '../config/prisma.instance.js';
 import createError from 'http-errors';
 
 export default {
+  filterCustomer: async (searchValue = '') => {
+    try {
+      const data = await prisma.user.findMany({
+        where: {
+          fullName: { contains: searchValue, mode: 'insensitive' },
+          role: 'USER',
+        },
+        select: {
+          avatar: true,
+          email: true,
+          fullName: true,
+          gender: true,
+          dateOfBirth: true,
+          phoneNumber: true,
+          address: true,
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   getUserByEmail: async (email) => {
     try {
       const user = await prisma.user.findUnique({ where: { email } });
