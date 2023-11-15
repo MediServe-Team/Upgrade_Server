@@ -227,4 +227,52 @@ export default {
       throw err;
     }
   },
+
+  updatePermitById: async (id, permitListIdInvo) => {
+    try {
+      // current permits
+      let permitBefores = await prisma.permit.findMany({
+        where: { userId: id },
+        select: {
+          permissionId: true,
+        },
+      });
+
+      // transfer to list permiIds
+      const permitListId = permitBefores.reduce((acc, curr) => {
+        acc.push(curr.permissionId);
+        return acc;
+      }, []);
+
+      // permits listId delete
+      const permitListIdDelete = permitListId.filter((id) => !permitListIdInvo.includes(id));
+
+      // permits listId create
+      const permitListIdCreate = permitListIdInvo.filter((id) => !permitListId.includes(id));
+
+      const transaction = await prisma.$transaction(async (tx) => {
+        //* delete permit not in pemit list
+        const deletePermitResults = await tx.permit.deleteMany({
+          where: {
+            permissionId: {
+              in: permitListIdDelete,
+            },
+            userId: id,
+          },
+        });
+
+        //* create new permit
+        const createPermitResults = await tx.permit.createMany({
+          data: permitListIdCreate.map((permissionId) => ({ userId: id, permissionId })),
+        });
+
+        //* return data of transaction
+        return { deletePermitResults, createPermitResults };
+      });
+
+      return Promise.resolve({ transaction });
+    } catch (err) {
+      throw err;
+    }
+  },
 };

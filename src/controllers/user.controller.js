@@ -72,4 +72,18 @@ export default {
       next(err);
     }
   },
+
+  changePermit: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { permitList } = req.body;
+      await userServices.updatePermitById(id, permitList);
+      res.status(200).json({
+        status: 200,
+        message: 'update permit for account success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

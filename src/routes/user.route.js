@@ -23,4 +23,8 @@ router.delete('/:id', verifyAccessToken, verifyAdminAccess, userController.delet
 //* [PUT] /users/change-role/:id    -> Change role  of user by id
 router.put('/change-role/:id', verifyAccessToken, verifyAdminAccess, userController.changeRole);
 
+//! can use: ADMIN
+//* [PUT] /users/change-permit/:id      -> Change list permit of staff by id
+router.put('/change-permit/:id', verifyAccessToken, verifyAdminAccess, userController.changePermit);
+
 export default router;
