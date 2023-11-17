@@ -1,5 +1,10 @@
 import prisma from '../config/prisma.instance.js';
 import createError from 'http-errors';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
+import { sendMail } from '../helpers/nodeMailer.js';
+import connectToRedis from '../config/redis.client.js';
+import { templateCreateAccount, MAIL_CREATE_SUBJECT } from '../constant/mailTemplate.js';
 
 export default {
   filterCustomer: async (searchValue = '') => {
@@ -294,6 +299,69 @@ export default {
       });
 
       return Promise.resolve({ transaction });
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  createAccountAndSendMail: async (accountInvo) => {
+    try {
+      //* check email in request
+      if (!accountInvo?.email) {
+        throw createError.ExpectationFailed('Expected email in request.');
+      }
+
+      //* data create accounts
+      const accountCreate = {};
+      accountCreate.email = accountInvo?.email;
+      accountCreate.name = accountInvo?.name;
+      accountCreate.fullName = accountInvo?.fullName;
+      accountCreate.address = accountInvo?.address;
+      accountCreate.dateOfBirth = accountInvo?.dateOfBirth;
+      accountCreate.phoneNumber = accountInvo?.phoneNumber;
+      accountCreate.role = ['USER', 'STAFF'].includes(accountInvo?.role) ? accountInvo.role : 'USER';
+
+      //* check email exists
+      const isExistEmail = await prisma.user.findUnique({
+        where: { email: accountInvo.email },
+      });
+      if (isExistEmail) {
+        throw createError.Conflict('This is email already exists');
+      }
+
+      //* Generate password
+      const generatePassword = crypto.randomBytes(4).toString('hex');
+      //* hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(generatePassword, salt);
+      accountCreate.password = hashPassword;
+
+      //* create account
+      const userResult = await prisma.user.create({
+        data: accountCreate,
+        select: {
+          id: true,
+          email: true,
+          fullName: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      //* send mail with email, generatePass
+      if (userResult) {
+        try {
+          await sendMail(
+            userResult.email,
+            MAIL_CREATE_SUBJECT,
+            templateCreateAccount(userResult.fullName, generatePassword),
+          );
+        } catch (err) {
+          throw err;
+        }
+      }
+
+      return Promise.resolve(userResult);
     } catch (err) {
       throw err;
     }

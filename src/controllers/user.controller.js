@@ -100,4 +100,19 @@ export default {
       next(err);
     }
   },
+
+  createAccountAndSendMail: async (req, res, next) => {
+    try {
+      const { email, name, fullName, address, dateOfBirth, phoneNumber, role } = req.body;
+      const dataInvo = { email, name, fullName, address, dateOfBirth, phoneNumber, role };
+      const data = await userServices.createAccountAndSendMail(dataInvo);
+      res.status(201).json({
+        status: 201,
+        message: 'create new account success!',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

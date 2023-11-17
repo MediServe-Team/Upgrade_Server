@@ -30,4 +30,8 @@ router.put('/change-role/:id', verifyAccessToken, verifyAdminAccess, userControl
 //* [PUT] /users/change-permit/:id      -> Change list permit of staff by id
 router.put('/change-permit/:id', verifyAccessToken, verifyAdminAccess, userController.changePermit);
 
+//! can use: ADMIN
+//* [POST] /users/create      -> create new Account
+router.post('/create', verifyAccessToken, verifyAdminAccess, userController.createAccountAndSendMail);
+
 export default router;
