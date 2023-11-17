@@ -7,6 +7,7 @@ import itemInStockRouter from './itemInStock.route.js';
 import itemRouter from './item.route.js';
 import medicineRouter from './medicine.route.js';
 import meRouter from './me.route.js';
+import userRouter from './user.route.js';
 
 function route(app) {
   app.use('/api/auth', authRouter);
@@ -18,6 +19,7 @@ function route(app) {
   app.use('/api/items', itemRouter);
   app.use('/api/medicines', medicineRouter);
   app.use('/api/me', meRouter);
+  app.use('/api/users', userRouter);
 }
 
 export default route;

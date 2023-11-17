@@ -57,7 +57,7 @@ export default {
       }
 
       // check exists user account
-      const user = await userService.getUserByEmail(email);
+      const user = await userService.getUserWithPerissionByEmail(email);
       if (!user) {
         throw createError.NotFound('This email is not exists.');
       }
