@@ -3,7 +3,6 @@ import createError from 'http-errors';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { sendMail } from '../helpers/nodeMailer.js';
-import connectToRedis from '../config/redis.client.js';
 import { templateCreateAccount, MAIL_CREATE_SUBJECT } from '../constant/mailTemplate.js';
 
 export default {
