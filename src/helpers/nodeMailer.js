@@ -25,9 +25,7 @@ export const sendMail = async (recipientEmail, subject, template) => {
   //* send mail
   mailTransporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('~ ~ ~ ~ ~ SEND MAIL error: ', error);
-    } else {
-      console.log('+ + + + SEND MAIL response: ', info.response);
+      console.log('❌ SEND MAIL FAILURE: ', error);
     }
   });
 };
