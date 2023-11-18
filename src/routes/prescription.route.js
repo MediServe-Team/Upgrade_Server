@@ -2,6 +2,9 @@ import prescriptionController from '../controllers/prescription.controller.js';
 import express from 'express';
 const router = express.Router();
 
+//* [GET] /prescriptions/filter?searchValue=""
+router.get('/filter', prescriptionController.filterPrescription);
+
 //* [GET] /prescriptions/all    -> Get all precriptions
 router.get('/all', prescriptionController.getaAllPrescription);
 

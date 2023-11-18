@@ -59,4 +59,18 @@ export default {
       next(err);
     }
   },
+
+  filterPrescription: async (req, res, next) => {
+    try {
+      const { searchValue } = req.query;
+      const data = await prescriptionServices.filterPrescription(searchValue);
+      res.status(200).json({
+        status: 200,
+        message: 'filter prescription success!',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
