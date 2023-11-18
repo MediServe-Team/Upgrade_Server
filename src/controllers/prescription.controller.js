@@ -45,4 +45,18 @@ export default {
       next(err);
     }
   },
+
+  getDetailPrescription: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await prescriptionServices.getPresciptionById(id);
+      res.status(200).json({
+        status: 200,
+        message: 'get a prescription success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

@@ -5,6 +5,9 @@ const router = express.Router();
 //* [GET] /prescriptions/all    -> Get all precriptions
 router.get('/all', prescriptionController.getaAllPrescription);
 
+//* [GET] /prescriptions/detail/:id     -> Get detail a prescription
+router.get('/detail/:id', prescriptionController.getDetailPrescription);
+
 //* [POST] /prescriptions/create    -> Create new prescription
 router.post('/create', prescriptionController.createPrescription);
 

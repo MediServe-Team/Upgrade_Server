@@ -19,6 +19,36 @@ export default {
     }
   },
 
+  getPresciptionById: async (id) => {
+    try {
+      const data = await prisma.prescription.findUnique({
+        where: { id: Number(id) },
+        include: {
+          MedicineGuides: {
+            select: {
+              medicineId: true,
+              morning: true,
+              noon: true,
+              night: true,
+              quantity: true,
+              note: true,
+              medicine: {
+                select: {
+                  itemName: true,
+                  packingSpecification: true,
+                  sellUnit: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createNewPrescription: async (prescriptionInvo, medicineInvos) => {
     try {
       const prescriptionCreate = {};
