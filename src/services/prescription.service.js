@@ -1,6 +1,24 @@
 import prisma from '../config/prisma.instance.js';
 
 export default {
+  getAllPrescription: async () => {
+    try {
+      const data = await prisma.prescription.findMany({
+        where: {
+          isDose: true,
+        },
+        select: {
+          id: true,
+          diagnose: true,
+          note: true,
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createNewPrescription: async (prescriptionInvo, medicineInvos) => {
     try {
       const prescriptionCreate = {};

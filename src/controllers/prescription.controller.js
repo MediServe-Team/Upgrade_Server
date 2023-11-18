@@ -32,4 +32,17 @@ export default {
       next(err);
     }
   },
+
+  getaAllPrescription: async (req, res, next) => {
+    try {
+      const data = await prescriptionServices.getAllPrescription();
+      res.status(200).json({
+        status: 200,
+        message: 'get all prescription success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
