@@ -16,4 +16,20 @@ export default {
       next(err);
     }
   },
+
+  updatePrescription: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { diagnose, note, listMedicines } = req.body;
+      const prescriptionInvo = { diagnose, note };
+      const data = await prescriptionServices.updatePrescription(id, prescriptionInvo, listMedicines);
+      res.status(200).json({
+        status: 200,
+        message: 'update a prescription success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

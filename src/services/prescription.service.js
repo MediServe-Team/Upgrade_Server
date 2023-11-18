@@ -37,4 +37,51 @@ export default {
       throw err;
     }
   },
+
+  updatePrescription: async (id, prescriptionInvo, medicineInvos) => {
+    try {
+      const prescriptionUpdate = {};
+      //* prescription data update
+      prescriptionUpdate.diagnose = prescriptionInvo?.diagnose;
+      prescriptionUpdate.note = prescriptionInvo?.note;
+
+      //* medicine guide data create
+      const medicineGuideCreates = medicineInvos.map((guide) => ({
+        medicineId: Number(guide?.medicineId),
+        prescriptionId: Number(id),
+        morning: Number(guide?.morning),
+        noon: Number(guide?.noon),
+        night: Number(guide?.night),
+        quantity: Number(guide?.quantity),
+        note: guide?.note,
+      }));
+
+      //* create prisma transaction
+      const transaction = await prisma.$transaction(async (tx) => {
+        //* update prescription
+        const prescriptionUpdateResult = await tx.prescription.update({
+          where: {
+            id: Number(id),
+          },
+          data: prescriptionUpdate,
+        });
+
+        //* delete before data medicine guide
+        const medicineDeleteResults = await tx.medicineGuide.deleteMany({
+          where: {
+            prescriptionId: Number(id),
+          },
+        });
+
+        //* create many medicine guide
+        const medicineGuideCreateResults = await tx.medicineGuide.createMany({ data: medicineGuideCreates });
+
+        return Promise.resolve({ prescriptionUpdateResult, medicineDeleteResults, medicineGuideCreateResults });
+      });
+
+      return Promise.resolve(transaction);
+    } catch (err) {
+      throw err;
+    }
+  },
 };
