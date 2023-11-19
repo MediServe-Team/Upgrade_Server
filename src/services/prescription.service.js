@@ -154,4 +154,13 @@ export default {
       throw err;
     }
   },
+
+  deletePrescription: async (id) => {
+    try {
+      const data = await prisma.prescription.delete({ where: { id: Number(id) } });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
 };

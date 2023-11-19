@@ -73,4 +73,17 @@ export default {
       next(err);
     }
   },
+
+  deletePrescription: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await prescriptionServices.deletePrescription(id);
+      res.status(200).json({
+        status: 200,
+        message: 'Delete a prescription success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

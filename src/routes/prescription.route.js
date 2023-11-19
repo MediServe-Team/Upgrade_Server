@@ -17,4 +17,7 @@ router.post('/create', prescriptionController.createPrescription);
 //* [PUT] /prescriptions/update/:id     -> Update a prescription
 router.put('/update/:id', prescriptionController.updatePrescription);
 
+//* [DELETE] /prescriptions/delete/:id  -> Delete a prescription
+router.delete('/delete/:id', prescriptionController.deletePrescription);
+
 export default router;
