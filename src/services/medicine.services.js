@@ -216,6 +216,8 @@ export default {
       medicineUpdate.sellUnit = medicineInvo?.sellUnit;
       medicineUpdate.inputUnit = medicineInvo?.inputUnit;
       medicineUpdate.itemFunction = medicineInvo?.medicineFunction;
+      medicineUpdate.applyToAffectedArea = medicineInvo?.applyToAffectedArea;
+      medicineUpdate.applyToAffectedAreaCode = medicineInvo?.applyToAffectedAreaCode;
       medicineUpdate.note = medicineInvo?.note;
       medicineUpdate.isPrescription = medicineInvo?.isPrescription;
 
