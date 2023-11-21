@@ -33,6 +33,36 @@ export default {
           });
           break;
 
+        case 'prescription':
+          data = await prisma.item.findMany({
+            where: {
+              isPrescription: true,
+              itemType: 'MEDICINE',
+              OR: [...searchCondition],
+            },
+            skip,
+            take: Number(limit),
+          });
+          totalRows = await prisma.item.count({
+            where: { isPrescription: true, itemType: 'MEDICINE', OR: [...searchCondition] },
+          });
+          break;
+
+        case 'non-prescription':
+          data = await prisma.item.findMany({
+            where: {
+              isPrescription: false,
+              itemType: 'MEDICINE',
+              OR: [...searchCondition],
+            },
+            skip,
+            take: Number(limit),
+          });
+          totalRows = await prisma.item.count({
+            where: { isPrescription: false, itemType: 'MEDICINE', OR: [...searchCondition] },
+          });
+          break;
+
         default:
           data = await prisma.item.findMany({
             where: {
@@ -115,6 +145,8 @@ export default {
       medicineCreate.sellUnit = medicineInvo?.sellUnit;
       medicineCreate.inputUnit = medicineInvo?.inputUnit;
       medicineCreate.itemFunction = medicineInvo?.medicineFunction;
+      medicineCreate.applyToAffectedArea = medicineInvo?.applyToAffectedArea;
+      medicineCreate.applyToAffectedAreaCode = medicineInvo?.applyToAffectedAreaCode;
       medicineCreate.note = medicineInvo?.note;
       medicineCreate.isPrescription = medicineInvo?.isPrescription;
       medicineCreate.itemType = 'MEDICINE';
