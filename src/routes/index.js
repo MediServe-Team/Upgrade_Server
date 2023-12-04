@@ -8,6 +8,8 @@ import itemRouter from './item.route.js';
 import medicineRouter from './medicine.route.js';
 import meRouter from './me.route.js';
 import userRouter from './user.route.js';
+import prescriptionRouter from './prescription.route.js';
+import receiptRouter from './receipt.route.js';
 
 function route(app) {
   app.use('/api/auth', authRouter);
@@ -20,6 +22,8 @@ function route(app) {
   app.use('/api/medicines', medicineRouter);
   app.use('/api/me', meRouter);
   app.use('/api/users', userRouter);
+  app.use('/api/prescriptions', prescriptionRouter);
+  app.use('/api/receipts', receiptRouter);
 }
 
 export default route;
