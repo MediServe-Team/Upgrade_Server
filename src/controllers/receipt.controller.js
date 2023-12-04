@@ -15,6 +15,28 @@ export default {
     }
   },
 
+  filterReceipts: async (req, res, next) => {
+    try {
+      const { staffName, customerName, fromDate, toDate, sort, pageNumber, limit } = req.query;
+      const data = await receiptServices.getAllReceiptWithCondition(
+        staffName,
+        customerName,
+        fromDate,
+        toDate,
+        sort,
+        pageNumber,
+        limit,
+      );
+      res.status(200).json({
+        status: 200,
+        message: 'filter receipt success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   createReceipt: async (req, res, next) => {
     try {
       const { staffId, totalPayment, givenByCustomer, note, customerId, guest, products, medicines, newPrescriptions } =
