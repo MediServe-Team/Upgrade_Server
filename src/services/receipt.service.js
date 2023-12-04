@@ -83,6 +83,96 @@ export default {
     }
   },
 
+  getReceiptById: async (id) => {
+    try {
+      const data = await prisma.receipt.findUnique({
+        where: { id: Number(id) },
+        select: {
+          //* receipts
+          id: true,
+          totalPayment: true,
+          givenByCustomer: true,
+          note: true,
+          //* list item
+          DetailReceiptItems: {
+            select: {
+              quantity: true,
+              totalPrice: true,
+              itemInStock: {
+                select: {
+                  sellPrice: true,
+                  item: {
+                    select: {
+                      itemName: true,
+                      sellUnit: true,
+                      packingSpecification: true,
+                      itemType: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          //* list presctiptions
+          DetailReceiptPrescriptions: {
+            select: {
+              quantity: true,
+              totalPrice: true,
+              prescription: {
+                select: {
+                  diagnose: true,
+                  totalPrice: true,
+                  note: true,
+                  MedicineGuideSells: {
+                    select: {
+                      morning: true,
+                      noon: true,
+                      night: true,
+                      quantity: true,
+                      totalPrice: true,
+                      note: true,
+                      medicine: {
+                        select: {
+                          sellPrice: true,
+                          item: {
+                            select: {
+                              itemName: true,
+                              sellUnit: true,
+                              packingSpecification: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  staff: {
+                    select: {
+                      fullName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          //* customer
+          customer: {
+            select: {
+              id: true,
+              fullName: true,
+              dateOfBirth: true,
+              gender: true,
+              address: true,
+            },
+          },
+          guest: true,
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createReceipt: async (receiptInvo, guestInvo, customerId, products, medicines, newPrescriptions) => {
     try {
       //! check enough quantity item

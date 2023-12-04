@@ -8,6 +8,9 @@ router.get('/of-user/:userId', receiptController.getReceiptOfUser);
 //* [GET] /receipts/filter  -> filter list receipt
 router.get('/filter', receiptController.filterReceipts);
 
+//* [GET] /receipts/detail/:id      -> get detail a receipt
+router.get('/detail/:id', receiptController.getDetailReceipt);
+
 //* [POST] /receipts/create     -> create a receipt
 router.post('/create', receiptController.createReceipt);
 

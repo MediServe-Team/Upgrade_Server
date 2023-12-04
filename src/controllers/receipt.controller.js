@@ -37,6 +37,20 @@ export default {
     }
   },
 
+  getDetailReceipt: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const data = await receiptServices.getReceiptById(id);
+      res.status(200).json({
+        status: 200,
+        message: 'get detail receipt success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   createReceipt: async (req, res, next) => {
     try {
       const { staffId, totalPayment, givenByCustomer, note, customerId, guest, products, medicines, newPrescriptions } =
