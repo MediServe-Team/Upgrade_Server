@@ -3,6 +3,24 @@ import presciptionServices from './prescription.service.js';
 import createError from 'http-errors';
 
 export default {
+  getReceiptOfUser: async (userId) => {
+    try {
+      const data = await prisma.receipt.findMany({
+        where: {
+          customerId: userId,
+        },
+        include: {
+          staff: {
+            select: { fullName: true },
+          },
+        },
+      });
+      return Promise.resolve(data);
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createReceipt: async (receiptInvo, guestInvo, customerId, products, medicines, newPrescriptions) => {
     try {
       //! check enough quantity item

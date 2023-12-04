@@ -1,6 +1,20 @@
 import receiptServices from '../services/receipt.service.js';
 
 export default {
+  getReceiptOfUser: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const data = await receiptServices.getReceiptOfUser(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'get all receipt of user success',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   createReceipt: async (req, res, next) => {
     try {
       const { staffId, totalPayment, givenByCustomer, note, customerId, guest, products, medicines, newPrescriptions } =
