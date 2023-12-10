@@ -18,6 +18,7 @@ export default {
           sellPrice: true,
           soldQuantity: true,
           expirationDate: true,
+          specification: true,
           item: {
             select: {
               id: true,
@@ -40,7 +41,7 @@ export default {
           // 1. check item don't prepare expired
           currentDate <= milestoneDate &&
           // 2. check item has enough quantity in stock
-          item.importQuantity - item.soldQuantity > 0
+          item.importQuantity - item.soldQuantity / item.specification > 0
         );
       });
       return Promise.resolve(itemInStockResults);
