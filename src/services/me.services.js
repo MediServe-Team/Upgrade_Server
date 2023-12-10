@@ -22,8 +22,7 @@ export default {
     try {
       const { avatar, certificate, identityCard } = userInvo;
       const DEFAULT_AVATAR =
-        'https://res.cloudinary.com/dwskvqnkc/image/upload/v1681721772/samples/MediSever/default-avatar_ahyatj.png';
-
+        'https://res.cloudinary.com/dwskvqnkc/image/upload/v1702204312/mediserve_image_store/avatar-default-icon_mfpilp.png';
       // user data update
       const userUpdate = {};
       userUpdate.name = userInvo?.name;
@@ -61,13 +60,11 @@ export default {
       }
 
       //* check store certificate
-      if (certificate) {
-        if (beforeUserData?.certificate) {
-          try {
-            removeImg(beforeUserData.certificate);
-          } catch (err) {
-            throw createError('Remove image in cloud error!');
-          }
+      if (certificate && beforeUserData?.certificate && certificate !== beforeUserData.certificate) {
+        try {
+          removeImg(beforeUserData.certificate);
+        } catch (err) {
+          throw createError('Remove image in cloud error!');
         }
         // store new img
         const imgURL = await storeImg(certificate);
@@ -75,13 +72,11 @@ export default {
       }
 
       //* check store identityCard
-      if (identityCard) {
-        if (beforeUserData?.identityCard) {
-          try {
-            removeImg(beforeUserData.identityCard);
-          } catch (err) {
-            throw createError('Remove image in cloud error!');
-          }
+      if (identityCard && beforeUserData?.identityCard && identityCard !== beforeUserData?.identityCard) {
+        try {
+          removeImg(beforeUserData.identityCard);
+        } catch (err) {
+          throw createError('Remove image in cloud error!');
         }
         // store new img
         const imgURL = await storeImg(identityCard);

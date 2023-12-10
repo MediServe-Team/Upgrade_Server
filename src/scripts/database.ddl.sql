@@ -37,7 +37,7 @@ CREATE TABLE users(
 	gender BOOLEAN,
 	date_of_birth DATE,
 	phone_number VARCHAR(20),
-	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1681721772/samples/MediSever/default-avatar_ahyatj.png',
+	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1702204312/mediserve_image_store/avatar-default-icon_mfpilp.png',
 	certificate TEXT,
 	identity_card TEXT,
 	num_of_ppc TEXT,

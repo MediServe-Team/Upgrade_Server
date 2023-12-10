@@ -12,6 +12,7 @@ export default {
           },
         },
         select: {
+          itemInStockId: true,
           importQuantity: true,
           importPrice: true,
           sellPrice: true,
@@ -33,8 +34,7 @@ export default {
         const expDate = new Date(item.expirationDate);
         const currentDate = new Date();
         // milestoneDate is 15 days before expiration date
-        const milestoneDate = new Date();
-        milestoneDate.setDate(expDate.getDate() - 15);
+        const milestoneDate = new Date(expDate.getTime() - 15 * 24 * 60 * 60 * 1000);
 
         return (
           // 1. check item don't prepare expired

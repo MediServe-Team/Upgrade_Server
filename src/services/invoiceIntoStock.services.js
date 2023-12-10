@@ -58,8 +58,8 @@ export default {
       const preExpMerchandise = itemInStockResults.filter((item) => {
         const currentDate = new Date();
         const expDate = new Date(item.expirationDate);
-        const nextThirtyDate = new Date();
-        nextThirtyDate.setDate(currentDate.getDate() + 30);
+        const nextThirtyDate = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        // nextThirtyDate.setDate(currentDate.getDate() + 30);
         return expDate > currentDate && expDate <= nextThirtyDate;
       });
       // 3. expired

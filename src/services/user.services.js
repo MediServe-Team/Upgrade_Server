@@ -176,7 +176,7 @@ export default {
     }
   },
 
-  editUserById: async (id, userInvo) => {
+  editUserById: async function (id, userInvo) {
     try {
       const userUpdate = {};
       //* user update data
@@ -191,6 +191,10 @@ export default {
       userUpdate.discount = userInvo?.discount;
       userUpdate.identityCard = userInvo?.identityCard;
       userUpdate.numOfPPC = userInvo?.numOfPPC;
+
+      if (userInvo?.permitList) {
+        await this.updatePermitById(id, userInvo.permitList);
+      }
 
       //* query user before data
       const beforeUserData = await prisma.user.findUnique({ where: { id } });
@@ -255,7 +259,7 @@ export default {
     }
   },
 
-  updatePermitById: async (id, permitListIdInvo) => {
+  updatePermitById: async function (id, permitListIdInvo) {
     try {
       // current permits
       let permitBefores = await prisma.permit.findMany({
