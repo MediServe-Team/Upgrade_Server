@@ -14,6 +14,7 @@ export default {
           role: 'USER',
         },
         select: {
+          id: true,
           avatar: true,
           email: true,
           fullName: true,
