@@ -21,4 +21,5 @@ router.put('/checkout', verifyAccessToken, meController.userCheckout);
 
 router.get('/list-checkin', verifyAccessToken, meController.getListCheckin);
 
+router.get('/checkin-today', verifyAccessToken, meController.getCheckinToday);
 export default router;

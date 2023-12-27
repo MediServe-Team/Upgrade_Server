@@ -217,6 +217,7 @@ export default {
             },
           ],
         },
+        orderBy: { id: 'asc' },
       });
 
       return results;

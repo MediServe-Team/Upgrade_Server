@@ -1,4 +1,5 @@
 import meServices from '../services/me.services.js';
+import checkinServices from '../services/v2/checkin.service.js';
 
 export default {
   getProfile: async (req, res, next) => {
@@ -63,9 +64,10 @@ export default {
   userCheckin: async (req, res, next) => {
     try {
       const { userId } = req.payload;
-      await meServices.userCheckin(userId);
+      const result = await meServices.userCheckin(userId);
       res.status(200).json({
         status: 200,
+        data: result,
         message: 'checkin success.',
       });
     } catch (err) {
@@ -94,6 +96,19 @@ export default {
       res.status(200).json({
         status: 200,
         data: results,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getCheckinToday: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      const result = await checkinServices.getCheckinToday(userId);
+      res.status(200).json({
+        status: 200,
+        data: result,
       });
     } catch (err) {
       next(err);
