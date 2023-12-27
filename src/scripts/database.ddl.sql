@@ -37,7 +37,7 @@ CREATE TABLE users(
 	gender BOOLEAN,
 	date_of_birth DATE,
 	phone_number VARCHAR(20),
-	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1681721772/samples/MediSever/default-avatar_ahyatj.png',
+	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1702204312/mediserve_image_store/avatar-default-icon_mfpilp.png',
 	certificate TEXT,
 	identity_card TEXT,
 	num_of_ppc TEXT,
@@ -243,4 +243,16 @@ CREATE TABLE medicine_guide_sell(
 	PRIMARY KEY (medicine_stock_id, prescription_id),
 	CONSTRAINT fk_medicineguide_medicine FOREIGN KEY(medicine_stock_id) REFERENCES item_in_stock(item_in_stock_id) ON DELETE CASCADE,
 	CONSTRAINT fk_medicine_guide_prescription FOREIGN KEY(prescription_id) REFERENCES prescription(prescription_id) ON DELETE CASCADE
+)
+
+
+CREATE TABLE checkin(
+	checkin_id SERIAL,
+	user_id UUID NOT NULL,
+	date_checkin DATE NOT NULL,
+	checkin_time TIMESTAMP,
+	checkout_time TIMESTAMP,
+	PRIMARY KEY(checkin_id),
+	UNIQUE (user_id, date_checkin),
+	CONSTRAINT fk_checkin_user FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 )

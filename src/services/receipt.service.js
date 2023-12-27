@@ -219,13 +219,19 @@ export default {
             where: {
               itemInStockId: Number(item.itemId),
             },
-            select: { importQuantity: true, soldQuantity: true, item: { select: { itemName: true } } },
+            select: {
+              importQuantity: true,
+              soldQuantity: true,
+              specification: true,
+              item: { select: { itemName: true, sellUnit: true } },
+            },
           });
           // check qnt
-          let itemInStockQnt = Number(itemInStock.importQuantity) - Number(itemInStock.soldQuantity);
+          let itemInStockQnt =
+            Number(itemInStock.importQuantity * itemInStock.specification) - Number(itemInStock.soldQuantity);
           if (itemInStockQnt < item.quantity) {
             throw createError.BadRequest(
-              `Item ${itemInStock.item.itemName} only has ${itemInStockQnt} in stock, not enough for ${item.quantity}`,
+              `${itemInStock.item.itemName} chỉ còn lại ${itemInStockQnt} ${itemInStock.item.sellUnit} trong kho, không đủ ${item.quantity} ${itemInStock.item.sellUnit}`,
             );
           }
         }),

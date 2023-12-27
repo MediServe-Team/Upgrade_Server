@@ -22,8 +22,7 @@ export default {
     try {
       const { avatar, certificate, identityCard } = userInvo;
       const DEFAULT_AVATAR =
-        'https://res.cloudinary.com/dwskvqnkc/image/upload/v1681721772/samples/MediSever/default-avatar_ahyatj.png';
-
+        'https://res.cloudinary.com/dwskvqnkc/image/upload/v1702204312/mediserve_image_store/avatar-default-icon_mfpilp.png';
       // user data update
       const userUpdate = {};
       userUpdate.name = userInvo?.name;
@@ -61,13 +60,11 @@ export default {
       }
 
       //* check store certificate
-      if (certificate) {
-        if (beforeUserData?.certificate) {
-          try {
-            removeImg(beforeUserData.certificate);
-          } catch (err) {
-            throw createError('Remove image in cloud error!');
-          }
+      if (certificate && beforeUserData?.certificate && certificate !== beforeUserData.certificate) {
+        try {
+          removeImg(beforeUserData.certificate);
+        } catch (err) {
+          throw createError('Remove image in cloud error!');
         }
         // store new img
         const imgURL = await storeImg(certificate);
@@ -75,13 +72,11 @@ export default {
       }
 
       //* check store identityCard
-      if (identityCard) {
-        if (beforeUserData?.identityCard) {
-          try {
-            removeImg(beforeUserData.identityCard);
-          } catch (err) {
-            throw createError('Remove image in cloud error!');
-          }
+      if (identityCard && beforeUserData?.identityCard && identityCard !== beforeUserData?.identityCard) {
+        try {
+          removeImg(beforeUserData.identityCard);
+        } catch (err) {
+          throw createError('Remove image in cloud error!');
         }
         // store new img
         const imgURL = await storeImg(identityCard);
@@ -149,6 +144,82 @@ export default {
         const redis = await connectToRedis();
         await redis.del(email);
       }
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  userCheckin: async (userId) => {
+    try {
+      const currentDateTime = new Date();
+      // time in
+      const timeIn = new Date(currentDateTime);
+      timeIn.setHours(timeIn.getHours() + 7);
+      // time out default
+      const timeOutDefault = new Date(currentDateTime);
+      // timeOutDefault.setHours(timeOutDefault.getHours() + 7);
+      timeOutDefault.setHours(24, 30, 0, 0);
+
+      const checkin = await prisma.checkin.create({
+        data: {
+          userId,
+          checkinTime: timeIn,
+          checkoutTime: timeOutDefault,
+          dateCheckin: currentDateTime,
+        },
+      });
+      return checkin;
+    } catch (err) {
+      throw new createError.Conflict('Unique constraint user_id & date_checkin');
+    }
+  },
+
+  userCheckout: async (userId) => {
+    try {
+      const currentDateTime = new Date();
+      const existCheckin = await prisma.checkin.findFirst({ where: { dateCheckin: currentDateTime, userId } });
+      if (!existCheckin) {
+        throw new createError.BadRequest('User does not checkin today.');
+      }
+      const timeOut = new Date(currentDateTime);
+      timeOut.setHours(timeOut.getHours() + 7);
+
+      const checkin = await prisma.checkin.updateMany({
+        data: { checkoutTime: timeOut },
+        where: { dateCheckin: currentDateTime, userId: userId },
+      });
+      return checkin;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getListCheckin: async (userId, month, year) => {
+    try {
+      if (!month || !year) {
+        throw new createError.BadRequest('Expected month and year in query params.');
+      }
+      const nextMonth = month == 12 ? 1 : Number(month) + 1;
+      const nextYear = month == 12 ? Number(year) + 1 : Number(year);
+      const firstDateOfMonth = new Date(`${year}-${month}-01`);
+      const firstDateOfNextMonth = new Date(`${nextYear}-${nextMonth}-01`);
+
+      // get list checkin in month, year
+      const results = prisma.checkin.findMany({
+        where: {
+          AND: [
+            { userId },
+            {
+              dateCheckin: {
+                gte: firstDateOfMonth, // First date of month
+                lt: firstDateOfNextMonth, // First date of next month
+              },
+            },
+          ],
+        },
+      });
+
+      return results;
     } catch (err) {
       throw err;
     }

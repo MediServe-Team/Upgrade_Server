@@ -50,16 +50,16 @@ export default {
       });
 
       //* detach merchandise for each status
-      // 1. prepare sold out
-      const preSoldOutMerchandise = itemInStockResults.filter(
-        (item) => item.importQuantity - item.soldQuantity / item.specification < 2,
-      );
+      // 1. prepare sold out(sản phẩm sắp hết khi số lượng < 1/5 số lượng nhập)
+      const preSoldOutMerchandise = itemInStockResults.filter((item) => {
+        const inStockQnt = item.importQuantity - item.soldQuantity / item.specification;
+        return inStockQnt < item.importQuantity / 5 && inStockQnt > 0;
+      });
       // 2. prepare expired
       const preExpMerchandise = itemInStockResults.filter((item) => {
         const currentDate = new Date();
         const expDate = new Date(item.expirationDate);
-        const nextThirtyDate = new Date();
-        nextThirtyDate.setDate(currentDate.getDate() + 30);
+        const nextThirtyDate = new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
         return expDate > currentDate && expDate <= nextThirtyDate;
       });
       // 3. expired
@@ -69,8 +69,14 @@ export default {
         return expDate <= currentDate;
       });
 
+      // 4. all
+      const allMerchandise = itemInStockResults.filter((item) => {
+        const inStockQnt = item.importQuantity - item.soldQuantity / item.specification;
+        return inStockQnt > 0;
+      });
+
       return Promise.resolve({
-        allMerchandise: itemInStockResults,
+        allMerchandise: allMerchandise,
         preSoldOutMerchandise,
         preExpMerchandise,
         expMerchandise,
@@ -184,6 +190,7 @@ export default {
                   itemName: true,
                   packingSpecification: true,
                   itemType: true,
+                  sellUnit: true,
                 },
               },
             },

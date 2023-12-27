@@ -60,6 +60,7 @@ model User {
   ReceiptCreateds   Receipt[]          @relation("StaffCreateReceipt")
   ReceiptPurchases  Receipt[]          @relation("CustomerGetReceipt")
   Prescriptions     Prescription[]     @relation("CreatedByStaff")
+  Checkins          Checkin[]
 
   @@map("users")
 }
@@ -291,4 +292,16 @@ model MedicineGuideSell {
 
   @@id([medicineStockId, prescriptionId], name: "medicineGuideSellId")
   @@map("medicine_guide_sell")
+}
+
+model Checkin {
+  id           Int       @id @default(autoincrement()) @map("checkin_id")
+  userId       String    @map("user_id")
+  dateCheckin  DateTime  @map("date_checkin")
+  checkinTime  DateTime  @map("checkin_time")
+  checkoutTime DateTime? @map("checkout_time")
+  // foreign key
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@map("checkin")
 }

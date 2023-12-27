@@ -59,4 +59,44 @@ export default {
       next(err);
     }
   },
+
+  userCheckin: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      await meServices.userCheckin(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'checkin success.',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  userCheckout: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      await meServices.userCheckout(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'checkout success.',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getListCheckin: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      const { month, year } = req.query;
+      const results = await meServices.getListCheckin(userId, month, year);
+      res.status(200).json({
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
