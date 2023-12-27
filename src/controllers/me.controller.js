@@ -85,4 +85,18 @@ export default {
       next(err);
     }
   },
+
+  getListCheckin: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      const { month, year } = req.query;
+      const results = await meServices.getListCheckin(userId, month, year);
+      res.status(200).json({
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

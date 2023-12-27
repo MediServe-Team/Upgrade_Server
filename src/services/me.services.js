@@ -193,4 +193,35 @@ export default {
       throw err;
     }
   },
+
+  getListCheckin: async (userId, month, year) => {
+    try {
+      if (!month || !year) {
+        throw new createError.BadRequest('Expected month and year in query params.');
+      }
+      const nextMonth = month == 12 ? 1 : Number(month) + 1;
+      const nextYear = month == 12 ? Number(year) + 1 : Number(year);
+      const firstDateOfMonth = new Date(`${year}-${month}-01`);
+      const firstDateOfNextMonth = new Date(`${nextYear}-${nextMonth}-01`);
+
+      // get list checkin in month, year
+      const results = prisma.checkin.findMany({
+        where: {
+          AND: [
+            { userId },
+            {
+              dateCheckin: {
+                gte: firstDateOfMonth, // First date of month
+                lt: firstDateOfNextMonth, // First date of next month
+              },
+            },
+          ],
+        },
+      });
+
+      return results;
+    } catch (err) {
+      throw err;
+    }
+  },
 };
