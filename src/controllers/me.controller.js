@@ -59,4 +59,17 @@ export default {
       next(err);
     }
   },
+
+  userCheckin: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      await meServices.userCheckin(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'checkin success.',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

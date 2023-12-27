@@ -244,3 +244,15 @@ CREATE TABLE medicine_guide_sell(
 	CONSTRAINT fk_medicineguide_medicine FOREIGN KEY(medicine_stock_id) REFERENCES item_in_stock(item_in_stock_id) ON DELETE CASCADE,
 	CONSTRAINT fk_medicine_guide_prescription FOREIGN KEY(prescription_id) REFERENCES prescription(prescription_id) ON DELETE CASCADE
 )
+
+
+CREATE TABLE checkin(
+	checkin_id SERIAL,
+	user_id UUID NOT NULL,
+	date_checkin DATE NOT NULL,
+	checkin_time TIMESTAMP,
+	checkout_time TIMESTAMP,
+	PRIMARY KEY(checkin_id),
+	UNIQUE (user_id, date_checkin),
+	CONSTRAINT fk_checkin_user FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+)

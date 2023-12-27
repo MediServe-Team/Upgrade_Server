@@ -148,4 +148,20 @@ export default {
       throw err;
     }
   },
+
+  userCheckin: async (userId) => {
+    try {
+      const currentDateTime = new Date();
+      const checkin = await prisma.checkin.create({
+        data: {
+          userId,
+          checkinTime: currentDateTime,
+          dateCheckin: currentDateTime,
+        },
+      });
+      return checkin;
+    } catch (err) {
+      throw new createError.Conflict('Unique constraint user_id & date_checkin');
+    }
+  },
 };
