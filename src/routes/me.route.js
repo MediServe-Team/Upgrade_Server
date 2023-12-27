@@ -17,5 +17,6 @@ router.put('/reset-password/:token', verifyResetPasswordToken, meController.rese
 
 router.post('/checkin', verifyAccessToken, meController.userCheckin);
 
-// router.put('/checkout')
+router.put('/checkout', verifyAccessToken, meController.userCheckout);
+
 export default router;

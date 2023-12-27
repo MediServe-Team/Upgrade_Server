@@ -152,16 +152,45 @@ export default {
   userCheckin: async (userId) => {
     try {
       const currentDateTime = new Date();
+      // time in
+      const timeIn = new Date(currentDateTime);
+      timeIn.setHours(timeIn.getHours() + 7);
+      // time out default
+      const timeOutDefault = new Date(currentDateTime);
+      // timeOutDefault.setHours(timeOutDefault.getHours() + 7);
+      timeOutDefault.setHours(24, 30, 0, 0);
+
       const checkin = await prisma.checkin.create({
         data: {
           userId,
-          checkinTime: currentDateTime,
+          checkinTime: timeIn,
+          checkoutTime: timeOutDefault,
           dateCheckin: currentDateTime,
         },
       });
       return checkin;
     } catch (err) {
       throw new createError.Conflict('Unique constraint user_id & date_checkin');
+    }
+  },
+
+  userCheckout: async (userId) => {
+    try {
+      const currentDateTime = new Date();
+      const existCheckin = await prisma.checkin.findFirst({ where: { dateCheckin: currentDateTime, userId } });
+      if (!existCheckin) {
+        throw new createError.BadRequest('User does not checkin today.');
+      }
+      const timeOut = new Date(currentDateTime);
+      timeOut.setHours(timeOut.getHours() + 7);
+
+      const checkin = await prisma.checkin.updateMany({
+        data: { checkoutTime: timeOut },
+        where: { dateCheckin: currentDateTime, userId: userId },
+      });
+      return checkin;
+    } catch (err) {
+      throw err;
     }
   },
 };

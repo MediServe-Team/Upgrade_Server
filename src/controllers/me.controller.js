@@ -72,4 +72,17 @@ export default {
       next(err);
     }
   },
+
+  userCheckout: async (req, res, next) => {
+    try {
+      const { userId } = req.payload;
+      await meServices.userCheckout(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'checkout success.',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
