@@ -61,6 +61,8 @@ model User {
   ReceiptPurchases  Receipt[]          @relation("CustomerGetReceipt")
   Prescriptions     Prescription[]     @relation("CreatedByStaff")
   Checkins          Checkin[]
+  Blogs             Blog[]
+  reactions         Reaction[]
 
   @@map("users")
 }
@@ -304,4 +306,33 @@ model Checkin {
   user         User      @relation(fields: [userId], references: [id])
 
   @@map("checkin")
+}
+
+model Blog {
+  id         Int        @id @default(autoincrement()) @map("post_id")
+  authorId   String     @map("author_id")
+  title      String?    @map("title")
+  content    String?    @map("content")
+  image      String?    @map("image")
+  reactCount Int?       @default(0) @map("react_count")
+  viewCount  Int?       @default(0) @map("view_count")
+  visibility Boolean    @default(false) @map("visibility")
+  // foreign key
+  user       User       @relation(fields: [authorId], references: [id])
+  // reference
+  reactions  Reaction[]
+
+  @@map("post")
+}
+
+model Reaction {
+  userId String @map("user_id")
+  blogId Int    @map("post_id")
+  react  String @map("react")
+  // foreign key
+  blog   Blog   @relation(fields: [blogId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([userId, blogId])
+  @@map("reaction")
 }

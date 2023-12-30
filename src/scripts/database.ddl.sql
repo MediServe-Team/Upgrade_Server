@@ -256,3 +256,19 @@ CREATE TABLE checkin(
 	UNIQUE (user_id, date_checkin),
 	CONSTRAINT fk_checkin_user FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 )
+
+
+CREATE TABLE post(
+	post_id SERIAL,
+	author_id UUID NOT NULL,
+	title TEXT,
+	content TEXT,
+	image TEXT,
+	react_count	INTEGER DEFAULT(0),
+	view_count INTEGER DEFAULT(0),
+	visibility BOOLEAN DEFAULT(false),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (post_id),
+	CONSTRAINT fk_post_author FOREIGN KEY(author_id) REFERENCES users(user_id) ON DELETE CASCADE
+)
