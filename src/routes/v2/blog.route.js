@@ -11,4 +11,6 @@ router.delete('/delete/:id', verifyAccessToken, blogController.deleteBlog);
 
 router.get('/view-all', blogController.getAllBlog);
 
+router.get('/detail/:id', blogController.getDetailBlog);
+
 export default router;

@@ -77,4 +77,9 @@ export default {
     const datas = await prisma.blog.findMany({ where: { visibility: true } });
     return datas;
   },
+
+  getBlogById: async (id) => {
+    const data = await prisma.blog.findFirst({ where: { id: Number(id) } });
+    return data;
+  },
 };
