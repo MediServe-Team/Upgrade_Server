@@ -7,4 +7,6 @@ router.post('/create', verifyAccessToken, blogController.createBlog);
 
 router.put('/update/:id', verifyAccessToken, blogController.updateBlog);
 
+router.delete('/delete/:id', verifyAccessToken, blogController.deleteBlog);
+
 export default router;

@@ -1,6 +1,6 @@
 import prisma from '../../config/prisma.instance.js';
 import createError from 'http-errors';
-import { storeImg } from '../../helpers/cloudinary.js';
+import { storeImg, removeImg } from '../../helpers/cloudinary.js';
 
 export default {
   createBlog: async (data) => {
@@ -50,6 +50,24 @@ export default {
       }
 
       await prisma.blog.update({ where: { id: Number(id) }, data: blogUpdate });
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteBlog: async (id) => {
+    try {
+      const BASE_CLOUDINARY_URL = 'http://res.cloudinary.com';
+
+      // remove blog image in cloudinary
+      const blogExisted = await prisma.blog.findFirst({ where: { id: Number(id) } });
+      if (blogExisted?.image && blogExisted.image.includes(BASE_CLOUDINARY_URL));
+      {
+        removeImg(blogExisted.image);
+      }
+
+      //  delete Blog permanent
+      await prisma.blog.delete({ where: { id: Number(id) } });
     } catch (err) {
       throw err;
     }

@@ -33,4 +33,19 @@ export default {
       next(err);
     }
   },
+
+  deleteBlog: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      await blogServices.deleteBlog(id);
+
+      res.status(200).json({
+        status: 200,
+        message: 'delete success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
