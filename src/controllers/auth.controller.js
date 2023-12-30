@@ -95,6 +95,37 @@ export default {
     }
   },
 
+  loginForCustomer: async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+
+      // validation data
+      const { error } = loginValidate(req.body);
+      if (error) {
+        throw createError(error.details[0].message);
+      }
+
+      // check exists user account
+      const user = await userService.getUserWithPerissionByEmail(email);
+      if (!user) {
+        throw createError.NotFound('This email is not exists.');
+      }
+
+      // check correct password
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        throw createError.Unauthorized('password is incorrect.');
+      }
+
+      res.status(200).json({
+        status: 200,
+        user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   logout: async (req, res, next) => {
     try {
       const { MediServe_refresh_token } = req.cookies;

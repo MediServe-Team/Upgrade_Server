@@ -6,6 +6,8 @@ router.post('/register', authControllers.register);
 
 router.post('/login', authControllers.login);
 
+router.post('/customer-login', authControllers.loginForCustomer);
+
 router.delete('/logout', authControllers.logout);
 
 router.post('/refreshToken', authControllers.refreshToken);
