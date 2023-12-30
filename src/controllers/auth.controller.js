@@ -10,7 +10,7 @@ dotenv.config();
 export default {
   register: async (req, res, next) => {
     try {
-      const { email, password, name, fullName } = req.body;
+      const { email, password, name } = req.body;
 
       // validation data
       const { error } = registerValidate(req.body);
@@ -32,7 +32,7 @@ export default {
         email,
         password: hashPassword,
         name,
-        fullName,
+        role: 'USER',
       };
 
       const saveUser = await userService.createUser(userInvo);

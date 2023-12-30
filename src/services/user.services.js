@@ -104,13 +104,14 @@ export default {
     }
   },
 
-  createUser: async ({ email, password, name, fullName }) => {
+  createUser: async ({ email, password, name, fullName, role }) => {
     try {
       const user = {
         email,
         password,
         name,
         fullName,
+        role,
       };
 
       const saveUser = await prisma.user.create({ data: user });

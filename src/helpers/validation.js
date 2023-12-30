@@ -4,7 +4,7 @@ const registerValidate = (data) => {
   const accountSchema = Joi.object({
     email: Joi.string().email().lowercase().required(),
     name: Joi.string().required(),
-    fullName: Joi.string().required(),
+    // fullName: Joi.string().required(),
     password: Joi.string().min(8).max(32).required(),
     confirmPassword: Joi.ref('password'),
   });
