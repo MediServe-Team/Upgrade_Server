@@ -72,4 +72,9 @@ export default {
       throw err;
     }
   },
+
+  getAllBlog: async () => {
+    const datas = await prisma.blog.findMany({ where: { visibility: true } });
+    return datas;
+  },
 };

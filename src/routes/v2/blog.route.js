@@ -9,4 +9,6 @@ router.put('/update/:id', verifyAccessToken, blogController.updateBlog);
 
 router.delete('/delete/:id', verifyAccessToken, blogController.deleteBlog);
 
+router.get('/view-all', blogController.getAllBlog);
+
 export default router;
