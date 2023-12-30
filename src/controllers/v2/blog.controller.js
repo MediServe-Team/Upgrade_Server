@@ -17,4 +17,20 @@ export default {
       next(err);
     }
   },
+
+  updateBlog: async (req, res, next) => {
+    try {
+      const dataInvo = req.body;
+      const { id } = req.params;
+
+      await blogServices.updateBlog(id, dataInvo);
+
+      res.status(200).json({
+        status: 200,
+        message: 'update success',
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

@@ -28,4 +28,30 @@ export default {
       throw err;
     }
   },
+
+  updateBlog: async (id, data) => {
+    try {
+      const blogExisted = await prisma.blog.findFirst({ where: { id: Number(id) } });
+
+      //* data update blog
+      const blogUpdate = {};
+      blogUpdate.title = data?.title ? data.title : blogExisted.title;
+      blogUpdate.content = data?.content ? data.content : blogExisted.content;
+      blogUpdate.visibility = data?.visibility ? data.visibility : blogExisted.visibility;
+
+      //* store blog image
+      if (data?.image) {
+        try {
+          const imgStored = await storeImg(data.image);
+          blogUpdate.image = imgStored.url;
+        } catch (err) {
+          throw createError.BadRequest('Can not store image to cloudinary.');
+        }
+      }
+
+      await prisma.blog.update({ where: { id: Number(id) }, data: blogUpdate });
+    } catch (err) {
+      throw err;
+    }
+  },
 };
