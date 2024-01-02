@@ -15,7 +15,7 @@ export default {
       // validation data
       const { error } = registerValidate(req.body);
       if (error) {
-        throw createError(error.details[0].message);
+        throw createError.BadRequest(error.details[0].message);
       }
 
       // check registered email
@@ -102,11 +102,11 @@ export default {
       // validation data
       const { error } = loginValidate(req.body);
       if (error) {
-        throw createError(error.details[0].message);
+        throw createError.BadRequest(error.details[0].message);
       }
 
       // check exists user account
-      const user = await userService.getUserWithPerissionByEmail(email);
+      const user = await userService.getUserByEmail(email);
       if (!user) {
         throw createError.NotFound('This email is not exists.');
       }
