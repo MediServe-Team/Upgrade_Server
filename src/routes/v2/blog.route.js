@@ -13,4 +13,6 @@ router.get('/view-all', blogController.getAllBlog);
 
 router.get('/detail/:id', blogController.getDetailBlog);
 
+router.get('/all', blogController.getAllBlogWithFilter);
+
 export default router;

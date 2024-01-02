@@ -89,7 +89,53 @@ export default {
   },
 
   getBlogById: async (id) => {
-    const data = await prisma.blog.findFirst({ where: { id: Number(id) } });
+    const data = await prisma.blog.findFirst({
+      where: { id: Number(id) },
+      include: {
+        user: {
+          select: {
+            avatar: true,
+            fullName: true,
+          },
+        },
+      },
+    });
     return data;
+  },
+
+  getBlogWithFilter: async (pageNumber, limit, search, status) => {
+    const statusValue = {
+      true: true,
+      false: false,
+    };
+    let totalRows;
+    const skip = pageNumber && limit ? (Number(pageNumber) - 1) * Number(limit) : undefined;
+    const searchCondition = {
+      ...(typeof statusValue[status] === 'boolean' ? { visibility: statusValue[status] } : {}),
+      OR: [
+        { user: { fullName: { contains: search, mode: 'insensitive' } } },
+        { title: { contains: search, mode: 'insensitive' } },
+      ],
+    };
+
+    const data = await prisma.blog.findMany({
+      where: { ...searchCondition },
+      include: {
+        user: {
+          select: {
+            avatar: true,
+            fullName: true,
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+      skip,
+      take: Number(limit),
+    });
+    totalRows = await prisma.blog.count({
+      where: { ...searchCondition },
+    });
+
+    return Promise.resolve({ blogs: data, totalPage: Math.ceil(totalRows / limit), currentpage: pageNumber });
   },
 };
