@@ -37,7 +37,7 @@ CREATE TABLE users(
 	gender BOOLEAN,
 	date_of_birth DATE,
 	phone_number VARCHAR(20),
-	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1702204312/mediserve_image_store/avatar-default-icon_mfpilp.png',
+	avatar TEXT DEFAULT 'http://res.cloudinary.com/dwskvqnkc/image/upload/v1702204939/mediserve_image_store/avatar-default-icon_mfpilp.png',
 	certificate TEXT,
 	identity_card TEXT,
 	num_of_ppc TEXT,
@@ -267,8 +267,34 @@ CREATE TABLE post(
 	react_count	INTEGER DEFAULT(0),
 	view_count INTEGER DEFAULT(0),
 	visibility BOOLEAN DEFAULT(false),
+	public_date DATE,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (post_id),
 	CONSTRAINT fk_post_author FOREIGN KEY(author_id) REFERENCES users(user_id) ON DELETE CASCADE
 )
+
+
+CREATE TABLE reaction (
+	user_id UUID NOT NULL,
+	post_id INTEGER NOT NULL,
+	react VARCHAR(20) NOT NULL DEFAULT('LIKE'),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT fk_reaction_user FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	CONSTRAINT fk_reaction_post FOREIGN KEY(post_id) REFERENCES post(post_id) ON DELETE CASCADE,
+	PRIMARY KEY(user_id, post_id)
+)
+
+CREATE TABLE store (
+	store_id SERIAL,
+	is_open BOOLEAN NOT NULL DEFAULT(true),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (store_id)
+)
+
+
+
+ALTER TABLE users
+ALTER COLUMN avatar SET DEFAULT 'http://res.cloudinary.com/dwskvqnkc/image/upload/v1702204939/mediserve_image_store/avatar-default-icon_mfpilp.png';

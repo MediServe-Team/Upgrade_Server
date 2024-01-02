@@ -12,6 +12,7 @@ import prescriptionRouter from './prescription.route.js';
 import receiptRouter from './receipt.route.js';
 import checkinRouter from '../routes/v2/checkin.route.js';
 import blogRouter from '../routes/v2/blog.route.js';
+import storeRouter from '../routes/v2/store.route.js';
 
 function route(app) {
   app.use('/api/auth', authRouter);
@@ -28,6 +29,7 @@ function route(app) {
   app.use('/api/receipts', receiptRouter);
   app.use('/api/checkins', checkinRouter);
   app.use('/api/blogs', blogRouter);
+  app.use('/api/stores', storeRouter);
 }
 
 export default route;

@@ -319,6 +319,7 @@ model Blog {
   visibility Boolean    @default(false) @map("visibility")
   createdAt  DateTime?  @default(now()) @map("created_at")
   updatedAt  DateTime?  @updatedAt @map("updated_at")
+  publicDate DateTime   @map("public_date")
   // foreign key
   user       User       @relation(fields: [authorId], references: [id])
   // reference
@@ -337,4 +338,11 @@ model Reaction {
 
   @@id([userId, blogId])
   @@map("reaction")
+}
+
+model Store {
+  id     Int     @id @default(autoincrement()) @map("store_id")
+  isOpen Boolean @map("is_open")
+
+  @@map("store")
 }
