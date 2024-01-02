@@ -36,4 +36,6 @@ router.post('/create', verifyAccessToken, verifyAdminAccess, userController.crea
 
 router.get('/customer/my-profile/:userId', userController.getCustomerProfile);
 
+router.put('/customer/update-profile/:userId', userController.updateCustomerProfile);
+
 export default router;
