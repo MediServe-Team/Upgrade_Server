@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { sendMail } from '../helpers/nodeMailer.js';
 import { templateCreateAccount, MAIL_CREATE_SUBJECT } from '../constant/mailTemplate.js';
+import { storeImg } from '../helpers/cloudinary.js';
 
 export default {
   filterCustomer: async (searchValue = '') => {
@@ -122,11 +123,12 @@ export default {
     }
   },
 
-  getAllUser: async () => {
+  getAllUser: async (role) => {
     try {
       const data = await prisma.user.findMany({
         where: {
           role: { notIn: ['ADMIN'] },
+          ...(role && ['USER', 'STAFF'].includes(role) ? { role } : {}),
         },
         select: {
           id: true,
@@ -365,6 +367,38 @@ export default {
           throw err;
         }
       }
+
+      return Promise.resolve(userResult);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  editUserCustomerById: async function (id, userInvo) {
+    try {
+      const userUpdate = {};
+      //* user update data
+      userUpdate.name = userInvo?.name;
+      userUpdate.fullName = userInvo?.fullName;
+      userUpdate.gender = userInvo?.gender;
+      userUpdate.age = userInvo?.age;
+      userUpdate.dateOfBirth = userInvo?.dateOfBirth;
+      userUpdate.phoneNumber = userInvo?.phoneNumber;
+      userUpdate.address = userInvo?.address;
+
+      //* update store user identityCard Img
+      if (userInvo?.avatar) {
+        const imgStored = await storeImg(userInvo.avatar);
+        userUpdate.avatar = imgStored.url;
+      }
+
+      //* query update user
+      const userResult = await prisma.user.update({
+        data: userUpdate,
+        where: {
+          id,
+        },
+      });
 
       return Promise.resolve(userResult);
     } catch (err) {

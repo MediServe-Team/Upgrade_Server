@@ -137,7 +137,7 @@ export default {
       const userInvo = req.body;
 
       // edit user
-      const data = await userServices.editUserById(userId, userInvo);
+      const data = await userServices.editUserCustomerById(userId, userInvo);
 
       res.status(200).json({
         status: 200,
