@@ -74,7 +74,17 @@ export default {
   },
 
   getAllBlog: async () => {
-    const datas = await prisma.blog.findMany({ where: { visibility: true } });
+    const datas = await prisma.blog.findMany({
+      where: { visibility: true },
+      include: {
+        user: {
+          select: {
+            avatar: true,
+            fullName: true,
+          },
+        },
+      },
+    });
     return datas;
   },
 
