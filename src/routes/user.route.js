@@ -34,4 +34,6 @@ router.put('/change-permit/:id', verifyAccessToken, verifyAdminAccess, userContr
 //* [POST] /users/create      -> create new Account
 router.post('/create', verifyAccessToken, verifyAdminAccess, userController.createAccountAndSendMail);
 
+router.get('/customer/my-profile/:userId', userController.getCustomerProfile);
+
 export default router;

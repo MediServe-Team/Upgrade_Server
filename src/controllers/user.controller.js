@@ -17,7 +17,8 @@ export default {
 
   getAllUser: async (req, res, next) => {
     try {
-      const userResults = await userServices.getAllUser();
+      const { role } = req.query;
+      const userResults = await userServices.getAllUser(role);
       res.status(200).json({
         status: 200,
         message: 'get all user success',
@@ -109,6 +110,20 @@ export default {
       res.status(201).json({
         status: 201,
         message: 'create new account success!',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getCustomerProfile: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const data = await userServices.getUserInfo(userId);
+      res.status(200).json({
+        status: 200,
+        message: 'get user infomation success',
         data,
       });
     } catch (err) {
