@@ -382,6 +382,12 @@ export default {
           diagnose: true,
           totalPrice: true,
           note: true,
+          updatedAt: true,
+          DetailReceiptPrescriptions: {
+            select: {
+              totalPrice: true,
+            },
+          },
           staff: {
             select: {
               fullName: true,
@@ -389,6 +395,12 @@ export default {
           },
         },
       });
+
+      data.map((item) => {
+        item.totalPrice = item.DetailReceiptPrescriptions[0].totalPrice;
+        delete item.DetailReceiptPrescriptions;
+      });
+
       return data;
     } catch (err) {
       throw err;
