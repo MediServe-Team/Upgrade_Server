@@ -363,4 +363,78 @@ export default {
       throw err;
     }
   },
+
+  getPrescriptionOfUser: async (userId) => {
+    try {
+      const data = await prisma.prescription.findMany({
+        where: {
+          DetailReceiptPrescriptions: {
+            some: {
+              receipt: {
+                customerId: userId,
+              },
+            },
+          },
+          isDose: false,
+        },
+        select: {
+          id: true,
+          diagnose: true,
+          totalPrice: true,
+          note: true,
+          staff: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
+      });
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getDetailPrescription: async (id) => {
+    try {
+      const data = await prisma.prescription.findFirst({
+        where: { id: Number(id) },
+        select: {
+          diagnose: true,
+          totalPrice: true,
+          note: true,
+          MedicineGuideSells: {
+            select: {
+              morning: true,
+              noon: true,
+              night: true,
+              quantity: true,
+              totalPrice: true,
+              note: true,
+              medicine: {
+                select: {
+                  sellPrice: true,
+                  item: {
+                    select: {
+                      itemName: true,
+                      sellUnit: true,
+                      packingSpecification: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          staff: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
+      });
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  },
 };

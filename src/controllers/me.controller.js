@@ -1,5 +1,7 @@
 import meServices from '../services/me.services.js';
 import checkinServices from '../services/v2/checkin.service.js';
+import prescriptionService from '../services/prescription.service.js';
+import receiptService from '../services/receipt.service.js';
 
 export default {
   getProfile: async (req, res, next) => {
@@ -106,6 +108,45 @@ export default {
     try {
       const { userId } = req.payload;
       const result = await checkinServices.getCheckinToday(userId);
+      res.status(200).json({
+        status: 200,
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getListBillsForCustomer: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const results = await receiptService.getReceiptOfUser(userId);
+      res.status(200).json({
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getListPrescritionForCustomer: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const results = await receiptService.getPrescriptionOfUser(userId);
+      res.status(200).json({
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getDetailPrescriptionForCustomer: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await receiptService.getDetailPrescription(id);
       res.status(200).json({
         status: 200,
         data: result,
