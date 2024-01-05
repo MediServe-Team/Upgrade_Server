@@ -93,6 +93,13 @@ export default {
           totalPayment: true,
           givenByCustomer: true,
           note: true,
+          createdAt: true,
+          updatedAt: true,
+          staff: {
+            select: {
+              fullName: true,
+            },
+          },
           //* list item
           DetailReceiptItems: {
             select: {
@@ -415,6 +422,8 @@ export default {
           diagnose: true,
           totalPrice: true,
           note: true,
+          createdAt: true,
+          updatedAt: true,
           MedicineGuideSells: {
             select: {
               morning: true,
