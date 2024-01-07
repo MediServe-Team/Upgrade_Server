@@ -14,6 +14,9 @@ export default {
             select: { fullName: true },
           },
         },
+        orderBy: {
+          updatedAt: 'desc',
+        },
       });
       return Promise.resolve(data);
     } catch (err) {
@@ -400,6 +403,9 @@ export default {
               fullName: true,
             },
           },
+        },
+        orderBy: {
+          updatedAt: 'desc',
         },
       });
 

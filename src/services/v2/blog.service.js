@@ -11,19 +11,38 @@ export default {
       blogCreate.content = data?.content;
       blogCreate.visibility = data?.visibility;
       blogCreate.authorId = data?.userId;
+      blogCreate.image = data?.bgColor;
+      if (data?.visibility === true) {
+        blogCreate.publicDate = new Date();
+      }
+      //* insert blog
+      const blogResult = await prisma.blog.create({ data: blogCreate });
 
-      //* store blog image
-      if (data?.image) {
+      //* store blog images to cloud
+      let imageCreatePromises = [];
+      if (data?.images && data.images.length > 0) {
         try {
-          const imgStored = await storeImg(data.image);
-          blogCreate.image = imgStored.url;
+          for (let img of data.images) {
+            let promise = new Promise(async (resolve) => {
+              const imgStored = await storeImg(img);
+              resolve(imgStored.url);
+            });
+            imageCreatePromises.push(promise);
+          }
+          const imgURLs = await Promise.all(imageCreatePromises);
+
+          //* insert blog images
+          if (imgURLs.length > 0) {
+            const imgBlogCreate = imgURLs.map((url) => ({
+              blogId: blogResult.id,
+              imageUrl: url,
+            }));
+            await prisma.blogImage.createMany({ data: imgBlogCreate });
+          }
         } catch (err) {
           throw createError.BadRequest('Can not store image to cloudinary.');
         }
       }
-
-      // create blog
-      await prisma.blog.create({ data: blogCreate });
     } catch (err) {
       throw err;
     }
@@ -83,7 +102,13 @@ export default {
             fullName: true,
           },
         },
+        BlogImages: {
+          select: {
+            imageUrl: true,
+          },
+        },
       },
+      orderBy: { updatedAt: 'desc' },
     });
     return datas;
   },
@@ -96,6 +121,11 @@ export default {
           select: {
             avatar: true,
             fullName: true,
+          },
+        },
+        BlogImages: {
+          select: {
+            imageUrl: true,
           },
         },
       },
@@ -125,6 +155,11 @@ export default {
           select: {
             avatar: true,
             fullName: true,
+          },
+        },
+        BlogImages: {
+          select: {
+            imageUrl: true,
           },
         },
       },

@@ -37,7 +37,7 @@ CREATE TABLE users(
 	gender BOOLEAN,
 	date_of_birth DATE,
 	phone_number VARCHAR(20),
-	avatar TEXT DEFAULT 'http://res.cloudinary.com/dwskvqnkc/image/upload/v1702204939/mediserve_image_store/avatar-default-icon_mfpilp.png',
+	avatar TEXT DEFAULT 'https://res.cloudinary.com/dwskvqnkc/image/upload/v1704600577/mediserve_image_store/avatar-default-icon_dyxr8c.png',
 	certificate TEXT,
 	identity_card TEXT,
 	num_of_ppc TEXT,
@@ -294,6 +294,13 @@ CREATE TABLE store (
 	PRIMARY KEY (store_id)
 )
 
+
+CREATE TABLE blog_image (
+    image_id SERIAL PRIMARY KEY,
+    post_id INT,
+    image_url VARCHAR(255),
+    FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE
+);
 
 
 ALTER TABLE users
